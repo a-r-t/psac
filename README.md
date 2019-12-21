@@ -17,3 +17,5 @@ application for the future.
 Note: I did not write this application, it was created by user ICLPX from Brawl Vault, I don't know anything
 about the person other than nobody can get in contact with them and that they don't speak English. It's an
 amazing tool, however the source code not being available has always been a huge issue.
+
+Any questions feel free to reach out to me, I'm catscatscats99 on Discord/BV.
