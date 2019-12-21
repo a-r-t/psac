@@ -1,0 +1,1209 @@
+﻿00010100
+Synchronous Timer
+Pause the current flow of events until the set time is reached. Synchronous timers count down when they are reached in the code.
+1
+
+00020000
+No Event
+No Event.
+
+
+00020100
+Asynchronous Timer
+Pause the current flow of events until the set time is reached. Asynchronous Timers start counting from the beginning of the animation.
+1
+
+00040100
+Set Loop
+Set a loop for X iterations.
+
+
+00050000
+Execute Loop
+Execute the the previously set loop.
+
+
+00070100
+Sub Routine
+Enter the event routine specified and return after ending.
+2
+
+00080000
+Return
+Return from a Subroutine.
+
+
+00090100
+Goto
+Goto the event location specified and execute.
+2
+
+000A0100
+If
+Start an If block until an Else or an EndIf is reached.
+6
+
+000A0200
+If
+Start an If block until an Else or an EndIf is reached.
+65
+
+000A0400
+If
+Start an If block until an Else or an EndIf is reached.
+6505
+
+000E0000
+Else
+Insert an Else block inside an If block.
+
+
+000B0400
+And Comparison
+Seems to be an "And" to an If statement.
+6505
+
+000D0400
+Else If Comparison
+Insert an Else If block inside of an If block.
+6505
+
+000F0000
+End If
+End an If block.
+
+
+00100200
+Switch
+Begin a multiple case Switch block.
+05
+
+00110100
+Case
+Handler for if the variable in the switch statement equals the specified value.
+
+
+00120000
+Default Case
+The case chosen if none of the others are executed.
+
+
+00130000
+End Switch
+End a Switch block.
+
+
+01010000
+Loop Rest
+Stop subsequent loads until achieve the "Set Requirement".
+
+
+02000300
+Change Action Status
+Change the current action upon the specified requirement being met. (the requirement does not have to be met at the time this ID is executed - it can be used anytime after execution.)
+006
+
+02010200
+Change Action
+Change the current action upon the specified requirement being met.
+06
+
+02010300
+Change Action
+Change the current action upon the specified requirement being met.
+065
+
+02010500
+Change Action
+Change the current action upon the specified requirement being met.
+06505
+
+02040100
+Additional Requirement
+Add an additional requirement to the preceeding Change Action statement.
+6
+
+02040200
+Additional Requirement
+Add an additional requirement to the preceeding Change Action statement.
+65
+
+02040400
+Additional Requirement
+Add an additional requirement to the preceeding Change Action statement.
+6505
+
+02060100
+Disable Other Status ID
+Enables the given Status ID.
+
+
+04000100
+Change SubAction
+Change the current sub action.
+
+
+04000200
+Change SubAction
+Change the current subaction. Specifies whether or not to pass the current frame or start the animation over.
+03
+
+05000000
+Reverse Direction
+The object is now considered to be facing the other direction. It will not visually change direction until the current animation ends or is interrupted.
+
+
+06000D00
+Offensive Collision
+Generate an offensive collision bubble with the specified parameters.
+0000011111110
+
+06040000
+Terminate Collisions
+Remove all currently present collision bubbles
+
+
+06050100
+Body Collision
+Change how the character's own collision bubbles act. (primarily used to invoke invulnerability)
+
+
+06080200
+Bone Collision
+Sets specific bones to a type of body collision.
+
+
+06060100
+Undo Bone Collision
+Sets bones to their normal collision type.
+
+
+060A0800
+Catch Collision
+Generate a grabbing collision bubble with the specified parameters
+00111100
+
+060D0000
+Terminate Catch Collisions
+Remove all currently present grab collision bubbles
+
+
+060E1100
+Throw Attack Collision
+Specify the properties of the throw to be used when 060F0500 is executed. Used for other things as well, such as some Final Smashes.
+00000000111000330
+
+060F0500
+Throw Collision
+Throws an opponent based on data provided by 060E1100.
+00555
+
+06150F00
+Special Offensive Collision
+Generate an offensive collision bubble - is able to achieve unique effects.
+000001111111000
+
+06170300
+Defensive Collision
+Generate a defensive collision bubble.
+
+
+06180300
+Defensive Collision Operation
+Removes defensive collisions.
+
+
+061B0500
+Move Hitbox
+Repositions an already-existing hitbox.
+00111
+
+062B0D00
+Thrown Collision
+Generates a damage collision bubble surrounding the character being thrown.
+0000011111110
+
+0A000100
+Sound Effect
+Play a specified sound effect.
+
+
+0A010100
+Stepping Sound Effect
+Play a specified sound effect plus a sound for stepping on the current terrain.
+
+
+0A020100
+Sound Effect (Transient)
+Play a specified sound effect. The sound effect ends with the animation.
+
+
+0A050100
+Victory Operation
+Undefined: Is used during victory poses.
+
+
+0A090100
+Other Sound Effect (Landing?)
+Play a specified sound effect plus a sound for landing on the current terrain - the values are different from normal sound effects.
+
+
+0A0A0100
+Other Sound Effect (Impact?)
+Play a specified sound effect (plus a sound for smacking the current terrain?) - the values are different from normal sound effects. 
+
+
+0A030100
+Stop Sound Effect
+Stops the specified sound effect immediately.
+
+
+0A070100
+Sound Effect 07
+Play a specified sound effect. sound effect occurs when landing.(Exception: Mario's Fireball)
+
+
+0C050000
+Terminate Instance
+Causes the acting instance to terminate (if possible). Will load secondary instance if available (i.e. character transformation).
+
+
+0C0B0000
+Low Voice Clip
+Play a random voice clip from the selection of low voice clips.
+
+
+0C190000
+Damage Voice Clip
+Play a random voice clip from the selection of damage voice clips.
+
+
+0C1D0000
+Ottotto Voice Clip
+Play one of the voice clip for Ottotto.
+
+
+04070100
+Frame Speed Modifier
+Dictates the frame speed of the subaction. Example: setting to 2 makes the animation and timers occur twice as fast.
+1
+
+0C230200
+Time Manipulation
+Slow down enemy movement. Mainly used for Final Smash. It is no influence other than fighter.
+
+
+0E000100
+Set Air/Ground
+Sets the current physics state.
+
+
+08000100
+Set Aerial/Onstage State
+Determines whether or not the character will slide off the edge.
+
+
+10000100
+Generate Article
+Generate a pre-made prop effect from the prop library.
+
+
+10030100
+Remove Article
+Removes an article.
+
+
+10050200
+Article Visibility
+Makes an article visible or invisible.
+03
+
+11001000
+Graphic Effect
+Generate a generic graphical effect with the specified parameters.
+0011111111111113
+
+11010A00
+External Graphic Effect
+Generate a graphical effect from an external file. (usually the Ef_ file)
+0011111113
+
+11020A00
+External Graphic Effect
+Generate a graphical effect from an external file. (usually the Ef_ file)
+0011111113
+
+11170700
+Screen Tint
+Tint the screen to the specified color.
+
+
+111A1000
+Graphic Effect
+Generate a generic graphical effect with the specified parameters.
+0011111111111113
+
+111B1000
+Graphic Effect
+Generate a generic graphical effect with the specified parameters.
+0011111111111113
+
+111C1000
+Graphic Effect(3)
+Generate a generic graphical effect with the specified parameters.
+0011111111111113
+
+11031400
+Sword Glow
+Creates glow of sword. Only usable when the proper effects are loaded by their respective characters. 
+00011101113001111111
+
+11041700
+Sword Glow
+Creates glow of Hammer.
+00011101113001111111001
+
+11050100
+Terminate Sword Glow
+Remove all Glow effects.
+
+
+11170600
+Screen Tint
+Tint the screen to the specified color.
+
+
+11180200
+End Screen Tint
+End Screen Tint.
+
+
+14070A00
+Aesthetic Wind Effect
+Moves nearby movable model parts (capes, hair, etc) with a wind specified by the parameters.
+0111111110
+
+12000200
+Basic Variable Set
+Set a basic variable to the specified value.
+05
+
+12010200
+Basic Variable Add
+Add a specified value to a basic variable.
+05
+
+12020200
+Basic Variable Subtract
+Subtract a specified value from a basic variable.
+05
+
+12060200
+Float Variable Set
+Set a floating point variable to the specified value.
+15
+
+12070200
+Float Variable Add
+Add a specified value to a float variable.
+15
+
+12080200
+Float Variable Subtract
+Subtract a specified value from a float variable.
+15
+
+120A0100
+Bit Variable Set
+Set a bit variable to true.
+5
+
+120B0100
+Bit Variable Clear
+Set a bit variable to false.
+5
+
+1A040500
+Camera Closeup
+Zoom the camera on the character.
+00111
+
+1A080000
+Normal Camera
+Return the camera to its normal settings.
+
+
+1F000100
+Pickup Item
+Cause the character to recieve the closest item in range.
+
+
+1F000200
+Pickup Item
+Cause the character to recieve the closest item in range.
+
+
+1F010300
+Throw Item
+Cause the character to throw the currently held item.
+555
+
+1F020000
+Drop Item
+Cause the character to drop any currently held item.
+
+
+1F030100
+Consume Item
+Cause the character to consume the currently held item.
+
+
+1F040200
+Item Property
+Modify a property of the currently held item.
+01
+
+1F070100
+Rocket Operation
+Undefined: Is used when firing a cracker launcher.
+5
+
+1F080100
+Generate Item
+Generate an item in the character's hand.
+
+
+1F0C0100
+Weapon Operation
+Creates a beam sword trail. Probably has more uses among battering weapons.
+
+
+1F0E0500
+Throw Item
+Causes the character to throw the currently held item.
+11555
+
+1F090100
+Item Visibility
+Determines visibilty of the currently held item.
+3
+
+1F050000
+Fire Weapon
+Fires a shot from the currently held item. (May have other unknown applications)
+
+
+1F060100
+Fire Projectile
+Fires a projectile of the specified degree of power.
+
+
+21000000
+Terminate Flash Effect
+Terminate all currently active flash effects.
+
+
+21010400
+Flash Overlay Effect
+Generate a flash overlay effect over the character with the specified colors and opacity. Replaces any currently active flash effects.
+
+
+21020500
+Change Flash Overlay Color
+Changes the color of the current flash overlay effect.
+
+
+21050600
+Flash Light Effect
+Generate a flash lighting effect over the character with the specified colors, opacity and angle. Replaces any currently active flash effects.
+000011
+
+21070500
+Change Flash Light Color
+Changes the color of the current flash light effect.
+
+
+64000000
+Allow Interrupt
+Allow the current action to be interrupted by another action.
+
+
+020A0100
+Allow Specific Interrupt
+Allows interruption only by specific commands. See parameters for list of possible interrupts.
+
+
+1A000100
+Screenshake
+Shakes the screen.
+
+
+0B020100
+Visibility
+Shows whether you're visible or not.
+3
+
+07070200
+Rumble
+Undefined. Affects the rumble feature of the controller.
+
+
+0E080200
+Set Momentum
+Controls the movement velocity of the object.
+11
+
+0E080400
+Set/Add Momentum
+Controls the movement velocity of the object.
+1100
+
+0E010200
+Add/Subtract Momentum
+Adds or subtracts speed to the character's current momentum.
+11
+
+0E060100
+Disallow Certain Movements
+When set to 2, sideways movement is disallowed. When set to 1, disables vertical gravity.
+
+
+0E070100
+Undue Prevent Certain Movements
+This must be set to the same value as Disallow Certain Movements to work. Disallow is a funny word.
+
+
+0E020100
+Prevent Vertical Movement
+When set to 1, vertical speed and acceleration are reset back to 0.
+
+
+0E040100
+Prevent Horizontal Gravity
+When set to 1, horizontal speed and decay rate are reset back to 0.
+
+
+0C250100
+Tag Display
+Disables or enables tag display for the current subaction.
+3
+
+1E000200
+Super/Heavy Armor
+Begins super armor or heavy armor. Set both parameters to 0 to end the armor.
+01
+
+1E030100
+Add/Subtract Damage
+Adds or subtracts the specified amount of damage from the character's current percentage.
+1
+
+06010200
+Change Hitbox Damage
+Changes a specific hitbox's damage to the new amount. Only guaranteed to work on Offensive Collisions.
+
+
+06030100
+Delete Hitbox
+Deletes a hitbox of the specified ID. Only guaranteed to work on Offensive Collisions.
+
+
+0B000200
+Model Changer
+Changes the char's model in certain preset ways. (Examples: sheathe sword, retreat into shell, etc.)
+
+
+0B010200
+Model Display Toggle?
+Changes what entries of Hidden and Visible bone indexes from Model Display are used in some fashion.
+
+
+10040100
+Set Article Action
+Sets the specified article to execute the specified action immediately. Only works on anchored articles (Cape, FLUDD, not fireball, water).
+
+
+10040200
+Set Article Action
+Sets the specified article to execute the specified action immediately. Only works on anchored articles (Cape, FLUDD, not fireball, water).
+
+
+10040300
+Set Anchored Article Action
+Sets the specified article to execute the specified action immediately. Only works on anchored articles (Cape, FLUDD, not fireball, water).
+003
+
+14040100
+Terminate Wind Effect
+Ends the wind effect spawned by the "Aesthetic Wind Effect" event.
+
+
+070B0200
+Rumble Loop
+Creates a rumble loop on the controller.
+
+
+18000100
+Slope Contour Stand
+Moves specific parts of the character if on sloped ground?
+
+
+18010200
+Slope Contour Full?
+Moves entire character to match sloped ground?
+
+
+18010300
+Slope Event?
+Moves entire character to match sloped ground?
+003
+
+10000200
+Generate Article
+Generate a pre-made prop effect from the prop library.
+
+
+10010100
+Article Event 02
+Makes the article preform an animation. For example, to make pit shoot his arrow, set it to 1.
+
+
+10010200
+Set Ex-Anchored Article Action
+Does the same thing as Set Article Action and Set Article Action 2 but seems to work on articles that are only initially attached to the character. (Used on Lucario's Aura Sphere)
+
+
+00030000
+Flow 03
+Undefined. in used Go to Loop.
+
+
+00060000
+Loop Break?
+Breaks out of the current loop?
+
+
+000B0100
+And
+Seems to be an "and" to an If statement.
+6
+
+000B0200
+And
+Seems to be an "and" to an If statement.
+65
+
+000C0100
+Or
+Insert an alternate requirement to fall back on if the above requirement(s) are not met.
+6
+
+000C0200
+Or
+Insert an alternate requirement to fall back on if the above requirement(s) are not met.
+65
+
+000C0400
+Or Comparison
+Insert an alternate requirement to fall back on if the above requirement(s) are not met.
+6505
+
+000D0100
+Else If
+Insert an Else If block inside of an If block.
+6
+
+000D0200
+Else If
+Insert an Else If block inside of an If block.
+65
+
+00180000
+Break
+Appears within Case statements; exits the switch event completely. All code located in the same case block after this event will not be executed.
+
+
+02000400
+Change Action Status
+Change the current action upon the specified requirement being met. (the requirement does not have to be met at the time this ID is executed - it can be used anytime after execution.)
+0065
+
+02000600
+Change Action Status
+Change the current action upon the specified requirement being met. (the requirement does not have to be met at the time this ID is executed - it can be used anytime after execution.)
+006505
+
+02080100
+Disable Action Status ID
+Disables the Action associated with the given Status ID.
+
+
+02090200
+Invert Action Status ID
+Appears to invert (or possibly only disable) a specific Status ID's enabled/disabled status. For example, if a character can crawl, this is used to disable the ability to dash when crouched, even though naturally crouching allows dashing through 020A (Allow Specific Interrupt).
+
+
+020B0100
+Prevent Specific Interrupt
+Closes the specific interruption window. Must be set to the same thing as the allow specific interrupt that you wish to cancel.
+
+
+020C0100
+Clear Prevent Interrupt
+Possibly unregisters a previously created interrupt.
+
+
+04020100
+Set Requirement
+Set requirement for reading "Loop Rest" or later.
+6
+
+04020200
+Set Requirement
+Set requirement for reading "Loop Rest" or later.
+65
+
+04020400
+Set Requirement
+Set requirement for reading "Loop Rest" or later.
+6505
+
+04030100
+Set Extra Requirement
+Add an additional requirement to "Set Requirement".
+6
+
+04030200
+Set Extra Requirement
+Add an additional requirement to "Set Requirement".
+65
+
+04030400
+Set Extra Requirement
+Add an additional requirement to "Set Requirement".
+6505
+
+04060100
+Set Animation Frame
+Changes the current frame of the animation. Does not change the frame of the subaction (i.e. timers and such are unaffected).
+1
+
+04010200
+Set Requirement 01
+Set requirement for reading "Loop Rest" or later.
+06
+
+040A0100
+Subactions 0A
+unknown. Set Sub Action ID?
+
+
+040B0100
+Subactions 0B
+unknown. Set Frame Speed?
+1
+
+04140100
+Set Animation & Timer Frame
+Changes the current frame of the animation and timers.
+1
+
+05010000
+Posture 01
+Undefined. Character Direction Related?
+
+
+05020000
+Posture 02
+Undefined. Character Direction Related?
+
+
+05030000
+Posture 03
+Undefined. Character Direction Related?
+
+
+05040000
+Posture 04
+Undefined. Character Direction Related?
+
+
+06020200
+Change Hitbox Size
+Changes a specific hitbox's size to the new amount. Only guaranteed to work on Offensive Collisions.
+01
+
+060C0100
+Delete Catch Collision
+Deletes the catch collision with the specified ID.
+
+
+06101100
+Inert Collision
+Generates an oblivious hitbox only used to detect collision with other characters/objects.
+00011110003003030
+
+062C0F00
+Special Collateral Collision
+Used for the "bump" collisions that occur when a character in knockback collides with another body.
+000001111111000
+
+06140200
+Add Hitbox Damage
+Add a specific hitbox's damage.
+
+
+062D0000
+Collisions 2D
+Undefined. in used Offensive Collision Related?
+
+
+07000000
+Clear Buffer?
+Possibly clears the controller buffer.
+
+
+07010000
+Controller 01
+Undefined.
+
+
+07020000
+Controller 02
+Undefined.
+
+
+07060100
+Controller 06
+Undefined.
+3
+
+070C0000
+Controller 0C
+Undefined.
+
+
+08010100
+Edge Interaction 01
+unknown.
+
+
+08020100
+Edge Interaction 02
+unknown.
+
+
+08040100
+Edge Interaction 04
+unknown.
+3
+
+08070000
+Edge Interaction 07
+unknown.
+
+
+09000100
+Module09 00
+Air/ground related. In the air, it's set to 2, and the edge to 5. On the ground, it's almost always 0. Setting this to any setting other than 2 while in the air will replenish jumps and recovery moves
+
+
+0C010000
+Character Specific 01
+Undefined.
+
+
+0C040000
+Character Specific 04
+Undefined.
+
+
+0C060000
+Enter Final Smash State
+Allows use of Final Smash locked articles, variables, etc. Highly unstable.
+
+
+0C070000
+Exit Final Smash State
+Undefined.
+
+
+0C080000
+Terminate Self
+Used by certain article instances to remove themselves.
+
+
+0C090100
+Allow/Disallow Ledgegrab
+Allow or disallow grabbing ledges during the current subaction.
+
+
+0C130000
+Character Specific 13
+Undefined.
+
+
+0C140200
+Set Static Article?
+in used Victory.
+
+
+0C150100
+Remove Static Article
+in used Victory.
+
+
+0C160000
+Character Specific 16
+Undefined.
+
+
+0C170100
+Character Specific 17
+Undefined. Often appears before 0C25 (Tag Display)
+3
+
+0C170200
+Character Specific 17 Variable
+Undefined. Often appears before 0C25 (Tag Display)
+35
+
+0C1A0200
+Character Specific 1A
+unknown. in used Attack using Star Rod or Lip Stick
+
+
+0C1C0200
+Character Specific 1C
+Used in Fighter.pac to do something based on which throw is in progress.
+
+
+0C1E0000
+Voice Clip 1E
+It is used to play voice clip for Attack or Ottotto.
+
+
+0C1F0000
+Eating Voice Clip
+Play a random voice clip from the selection of eating voice clips.
+
+
+0C270000
+Character Specific 27
+Undefined. Often appears within Switch statements.
+
+
+0C2B0000
+Character Specific 2B
+Undefined.
+
+
+0D000200
+Concurrent Infinite Loop
+Runs a subroutine once per frame for the current action.
+02
+
+0D010100
+Terminate Concurrent Infinite Loop
+Seems to stop the execution of a loop created with 0D000200 (Concurrent Infinite Loop).
+
+
+0F030200
+Link 03
+unknown.
+
+
+12030100
+Basic Variable Increment
+Variable++
+5
+
+12040100
+Basic Variable Decrement
+Variable--
+5
+
+12050300
+Basic Variable Randi
+Load a basic variable with a random integer.
+115
+
+120D0200
+Basic Variable Multiply
+Multiply a basic value by the specified value.
+05
+
+120E0200
+Basic Variable Divide
+Divide a basic value by the specified value.
+05
+
+120F0200
+Float Variable Multiply
+Multiply a specified value with a float variable.
+15
+
+12100200
+Float Variable Divide
+Divide a specified value with a float variable.
+15
+
+12110200
+Basic Variable Set Absolute
+Sets a Basic type variable to the absolute value of the specified value
+05
+
+12120200
+Float Variable Set Absolute
+Set a float variable equal to the absolute value of some float
+15
+
+12090300
+Float Variable Randi
+Load a float variable with a random integer.
+115
+
+17010000
+Physics 01
+Undefined.
+
+
+17050000
+Physics 05
+Undefined.
+
+
+19010000
+Module19 01
+Undefined.
+
+
+1A030400
+Set Camera Boundaries
+Changes the camera boundaries of your character. Does not reset the camera boundaries; rather, it adds to them. Reverts to normal when the animation ends.
+1111
+
+1A060100
+Detach/Attach Camera (Close)
+Causes the camera to follow or stop following a character.
+3
+
+1A070100
+Detach/Attach Camera (Far)
+Set whether the camera recognizes characters.
+3
+
+1A0B0000
+Force Camera Control
+Appears to override any other settings in favor of the character's preference.
+
+
+1F0A0000
+Obliterate Held Item
+Deletes the item that the character is holding.
+
+
+64010000
+Disallow Interrupt
+Disable all interrupts on the current action.
+
+
+14050100
+Aesthetic Wind 05
+Affects wind.
+3
+
+10070200
+Set Article Action
+Does the same thing as Set Article Action but seems to work on articles that aren't attached to the character.
+
+
+020D0100
+Change Reading Action
+Only used in Action Pre. Change the Action ID to be read.
+
+
+18030200
+Character Specific 03
+Undefined. used in samus.
+01
+
+1F0F0100
+Morph Model Event
+If false model will appear else if true model will disappear.
+
+
+01000000
+Go to Loop Rest 01
+Use it when looping using Goto.Usually it is used with "Go to Loop Rest 02".
+
+
+01020000
+Go to Loop Rest 02
+Use it when looping using Goto.Usually it is used with "Go to Loop Rest 01".
+
+
+02050300
+Additional Action Interrupts Requirement
+Only used Extra Action Interrupts.
+006
+
+02050400
+Additional Action Interrupts Requirement
+Only used Extra Action Interrupts.
+0065
+
+02050600
+Additional Action Interrupts Requirement
+Only used Extra Action Interrupts.
+006505
+
+0E0B0200
+Graphic Model Specf
+Appears to control posture graphics.
+
+
+111E0100
+Set Flashing Effect?
+Start Flashing Effect.
+
+
+111F0100
+End Flashing Effect?
+End Flashing Effect.
+
+
+11150300
+Terminate Graphic Effect
+Terminate a lingering graphical effect.
+033
+
+17000000
+Physics Normalize
+Returns to normal physics.
+
+
+100C0200
+Article Frame Speed
+Change the animation speed of the article.
+
+
+10130100
+Link Character and Article?
+Seems to be used whenever a detached article needs to change its action.
+
+
+10080200
+Set Remote Article Action
+Does the same thing as Set Article Action but seems to work on articles that aren't attached to the character. (Used on Snake's downB)
+
+
+100A0300
+Link Article to Bone
+Used in Snake's Neutral B to attach the grenade to his hand.
+
+
+10020100
+ONLY Article Event
+Article Animaion.
+

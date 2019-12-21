@@ -1,0 +1,312 @@
+﻿00010100
+1
+frames=\X
+
+00020100
+1
+frames=\X
+
+00040100
+V
+FFFFFFFF-Infinite
+XDefault-\D times
+
+000A0200
+01
+\X: \X
+
+000A0400
+01
+\X: \X \C \X
+
+000B0200
+01
+\X: \X
+
+000B0400
+01
+\X: \X \C \X
+
+000C0200
+01
+\X: \X
+
+000C0400
+01
+\X: \X \C \X
+
+000D0200
+01
+\X: \X
+
+000D0400
+01
+\X: \X \C \X
+
+02000300
+1
+id:\X, action=\X, Requirement=\X
+
+02000400
+1
+id:\X, action=\X, Requirement=\X:\X
+
+02000600
+1
+id:\X, action=\X, Requirement=\X: \X \C \X
+
+
+02010200
+1
+action=\X, Requirement=\X
+
+02010300
+1
+action=\X, Requirement=\X: \X
+
+02010500
+1
+action=\X, Requirement=\X: \X \C \X
+
+02040200
+01
+\X: \X
+
+02040400
+01
+\X: \X \C \X
+
+02050300
+1
+interrupt id=\X, status id=\X, Requirement=\X
+
+02050400
+1
+interrupt id=\X, status id=\X, Requirement=\X: \X
+
+02050600
+1
+interrupt id=\X, status id=\X, Requirement=\X: \X \C \X
+
+020A0100
+V
+00000001-Ground Special
+00000002-Ground Item
+00000003-Ground Catch
+00000004-Ground Attack
+00000005-Ground Escape
+00000006-Ground Guard
+00000007-Ground Jump
+00000008-Ground (Other)
+00000009-Air Landing
+0000000A-Grab Edge
+0000000B-Air Special
+0000000C-Air Item Throw
+0000000D-Air Lasso
+0000000E-Air Dodge
+0000000F-Air Attack
+00000010-Air Tread Jump
+00000011-Air Walljump
+00000012-Air Jump Aerial
+00000013-Fall Through Platform (Squat Only)
+XDefault-Undefined(\D)
+
+04000100
+1
+subAction=\X
+
+04000200
+1
+subAction=\X, pass frame=\X
+
+04020200
+01
+\X: \X
+
+04020400
+01
+\X: \X \C \X
+
+04030200
+01
+\X: \X
+
+04030400
+01
+\X: \X \C \X
+
+06000D00
+C
+id=\H0048, bone=\H0004, Damage=\X01, ShieldDamage=\H0404, direction=\X02, WeightKnockback=\H0304, KnockbackGrowth=\H0348, BaseKnockback=\H0448, size=\X05, z offset=\X06, y offset=\X07, x offset=\X08, TripRate=\X09, HitlagMultiplier=\X10, SDIMultiplier=\X11, Flags=\X12
+
+06010200
+1
+id=\X, Damege=\X
+
+06020200
+1
+id=\X, size=\X
+
+06050100
+V
+00000000-Normal
+00000001-Invincible
+00000002-Intangible
+00000003-Intangible No Flashing
+00000004-Intangible Quick Flashing
+XDefault-Undefined(\D)
+
+060A0800
+1
+id=\X, bone=\X, size=\X, x offset=\X, y offset=\X, z offset=\X, Action=\X, Air/Ground=\X
+
+060E1100
+1
+id=\X, bone=\X, Damage=\X, direction=\X, KnockbackGrowth=\X, WeightKnockback=\X, BaseKnockback=\X, Element=\X, \X, \X, \X, \X, \X, \X, \X, \X, \X
+
+06140200
+1
+id=\X, Damege=\X
+
+06150F00
+C
+id=\H0048, bone=\H0004, Damage=\X01, ShieldDamage=\H0404, direction=\X02, WeightKnockback=\H0304, KnockbackGrowth=\H0348, BaseKnockback=\H0448, size=\X05, z offset=\X06, y offset=\X07, x offset=\X08, TripRate=\X09, HitlagMultiplier=\X10, SDIMultiplier=\X11, Flags=\X12, RehitRate=\X13, SpecialFlags=\X14
+
+061B0500
+1
+id=\X, bone=\X, z offset=\X, y offset=\X, x offset=\X
+
+08000100
+V
+00000001-Can drop off side of stage
+00000002-Can't drop off side of stage
+00000005-In Air; Can leave stage vertically
+XDefault-Undefined(\D)
+
+0E000100
+V
+00000000-In Air
+00000001-Floating On Ground
+00000006-On Ground
+XDefault-Undefined(\D)
+
+0E010200
+1
+Horizontal Speed=\X, Vertical Speed=\X
+
+11001000
+1
+Graphic=\X, bone=\X, z offset=\X, y offset=\X, x offset=\X, z rotate=\X, y rotate=\X, x rotate=\X, size=\X, random Z offset=\X, random Y offset=\X, random X offset=\X, random Z rotate=\X, random Y rotate=\X, random X rotate=\X, Terminate with animation=\X
+
+11010A00
+1
+file#=\H, Graphic=\H, bone=\X, z offset=\X, y offset=\X, x offset=\X, z rotate=\X, y rotate=\X, x rotate=\X, size=\X, Terminate with animation=\X
+
+11020A00
+1
+file#=\H, Graphic=\H, bone=\X, z offset=\X, y offset=\X, x offset=\X, z rotate=\X, y rotate=\X, x rotate=\X, size=\X, Terminate with animation=\X
+
+11031400
+1
+id=\X, blur=\X, 1st bone=\X, 1st x offset=\X, 1st y offset=\X, 1st z offset=\X, 2nd bone=\X, 2nd x offset=\X, 2nd y offset=\X, 2nd z offset=\X, \X, Graphic=\X, bone=\X, x offset=\X, y offset=\X, z offset=\X, x rotate=\X, y rotate=\X, z rotate=\X, size=\X
+
+11041700
+1
+id=\X, blur=\X, 1st bone=\X, 1st x offset=\X, 1st y offset=\X, 1st z offset=\X, 2nd bone=\X, 2nd x offset=\X, 2nd y offset=\X, 2nd z offset=\X, \X, Graphic=\X, bone=\X, x offset=\X, y offset=\X, z offset=\X, x rotate=\X, y rotate=\X, z rotate=\X, size=\X, \X, \X, \X
+
+11170700
+1
+undefined=\X, transition time=\X, red=\X, green=\X, blue=\X, alpha=\X
+
+111A1000
+1
+Graphic=\X, bone=\X, z offset=\X, y offset=\X, x offset=\X, z rotate=\X, y rotate=\X, x rotate=\X, size=\X, random Z offset=\X, random Y offset=\X, random X offset=\X, random Z rotate=\X, random Y rotate=\X, random X rotate=\X, Terminate with animation=\X
+
+111B1000
+1
+Graphic=\X, bone=\X, z offset=\X, y offset=\X, x offset=\X, z rotate=\X, y rotate=\X, x rotate=\X, size=\X, random Z offset=\X, random Y offset=\X, random X offset=\X, random Z rotate=\X, random Y rotate=\X, random X rotate=\X, Terminate with animation=\X
+
+12000200
+C
+\X01 = \X00
+
+12010200
+C
+\X01 + \X00
+
+12020200
+C
+\X01 - \X00
+
+12030100
+1
+\X++
+
+12040100
+1
+\X--
+
+12060200
+C
+\X01 = \X00
+
+12070200
+C
+\X01 + \X00
+
+12080200
+C
+\X01 - \X00
+
+120A0100
+1
+\X = true
+
+120B0100
+1
+\X = false
+
+120D0200
+C
+\X01 * \X00
+
+120E0200
+C
+\X01 / \X00
+
+120F0200
+C
+\X01 * \X00
+
+12100200
+C
+\X01 / \X00
+
+1A040500
+1
+zoom time=\X, undefined=\X, distance=\X, X rot=\X, Y rot=\X
+
+1E000200
+V
+00000000-Normal,
+00000001-Super Armor,
+00000002-Knockback Armor,
+00000003-Damage Armor,
+XDefault-Undefined(\D)
+XDefault-\X
+
+21010400
+1
+red=\X, green=\X, blue=\X, alpha=\X
+
+21020500
+1
+transition time=\X, red=\X, green=\X, blue=\X, alpha=\X
+
+21050600
+1
+red=\X, green=\X, blue=\X, alpha=\X, angle=\X, \X
+
+21070500
+1
+transition time=\X, red=\X, green=\X, blue=\X, alpha=\X
