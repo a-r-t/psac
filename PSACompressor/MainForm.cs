@@ -46467,7 +46467,7 @@ namespace PSACompressor
             this.DataTable.Location = new System.Drawing.Point(4, 22);
             this.DataTable.Name = "DataTable";
             this.DataTable.Padding = new System.Windows.Forms.Padding(3);
-            this.DataTable.Size = new System.Drawing.Size(351, 207);
+            this.DataTable.Size = new System.Drawing.Size(351, 210);
             this.DataTable.TabIndex = 1;
             this.DataTable.Text = "Data Table";
             this.DataTable.UseVisualStyleBackColor = true;
@@ -46479,7 +46479,7 @@ namespace PSACompressor
             this.DataDTList.FormattingEnabled = true;
             this.DataDTList.Location = new System.Drawing.Point(3, 3);
             this.DataDTList.Name = "DataDTList";
-            this.DataDTList.Size = new System.Drawing.Size(345, 201);
+            this.DataDTList.Size = new System.Drawing.Size(345, 204);
             this.DataDTList.TabIndex = 3;
             this.DataDTList.TabStop = false;
             // 
@@ -46489,7 +46489,7 @@ namespace PSACompressor
             this.DataExRn.Location = new System.Drawing.Point(4, 22);
             this.DataExRn.Name = "DataExRn";
             this.DataExRn.Padding = new System.Windows.Forms.Padding(3);
-            this.DataExRn.Size = new System.Drawing.Size(351, 207);
+            this.DataExRn.Size = new System.Drawing.Size(351, 210);
             this.DataExRn.TabIndex = 2;
             this.DataExRn.Text = "External Sub Routines";
             this.DataExRn.UseVisualStyleBackColor = true;
@@ -46501,7 +46501,7 @@ namespace PSACompressor
             this.DataExrnList.FormattingEnabled = true;
             this.DataExrnList.Location = new System.Drawing.Point(3, 3);
             this.DataExrnList.Name = "DataExrnList";
-            this.DataExrnList.Size = new System.Drawing.Size(345, 201);
+            this.DataExrnList.Size = new System.Drawing.Size(345, 204);
             this.DataExrnList.TabIndex = 3;
             this.DataExrnList.TabStop = false;
             // 
@@ -46574,7 +46574,7 @@ namespace PSACompressor
             this.DMisc.Location = new System.Drawing.Point(4, 22);
             this.DMisc.Name = "DMisc";
             this.DMisc.Padding = new System.Windows.Forms.Padding(3);
-            this.DMisc.Size = new System.Drawing.Size(351, 207);
+            this.DMisc.Size = new System.Drawing.Size(351, 210);
             this.DMisc.TabIndex = 3;
             this.DMisc.Text = "Misc";
             this.DMisc.UseVisualStyleBackColor = true;
@@ -46599,7 +46599,7 @@ namespace PSACompressor
             this.DMiscSplit.Panel2.Controls.Add(this.DMiscOffset);
             this.DMiscSplit.Panel2.Controls.Add(this.DMiscOffsetLabel);
             this.DMiscSplit.Panel2MinSize = 125;
-            this.DMiscSplit.Size = new System.Drawing.Size(345, 201);
+            this.DMiscSplit.Size = new System.Drawing.Size(345, 204);
             this.DMiscSplit.SplitterDistance = 115;
             this.DMiscSplit.TabIndex = 0;
             // 
@@ -46610,7 +46610,7 @@ namespace PSACompressor
             this.DMiscList.HideSelection = false;
             this.DMiscList.Location = new System.Drawing.Point(0, 0);
             this.DMiscList.Name = "DMiscList";
-            this.DMiscList.Size = new System.Drawing.Size(115, 201);
+            this.DMiscList.Size = new System.Drawing.Size(115, 204);
             this.DMiscList.TabIndex = 0;
             this.DMiscList.TabStop = false;
             this.DMiscList.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.DMiscList_AfterSelect);
@@ -46621,7 +46621,7 @@ namespace PSACompressor
             | System.Windows.Forms.AnchorStyles.Right)));
             this.DMiscCb.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.DMiscCb.FormattingEnabled = true;
-            this.DMiscCb.Location = new System.Drawing.Point(155, 179);
+            this.DMiscCb.Location = new System.Drawing.Point(155, 182);
             this.DMiscCb.Name = "DMiscCb";
             this.DMiscCb.Size = new System.Drawing.Size(71, 21);
             this.DMiscCb.TabIndex = 5;
@@ -46631,7 +46631,7 @@ namespace PSACompressor
             // DMiscDone
             // 
             this.DMiscDone.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.DMiscDone.Location = new System.Drawing.Point(100, 177);
+            this.DMiscDone.Location = new System.Drawing.Point(100, 180);
             this.DMiscDone.Name = "DMiscDone";
             this.DMiscDone.Size = new System.Drawing.Size(55, 25);
             this.DMiscDone.TabIndex = 4;
@@ -46643,7 +46643,7 @@ namespace PSACompressor
             // DMiscPtxt
             // 
             this.DMiscPtxt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.DMiscPtxt.Location = new System.Drawing.Point(0, 180);
+            this.DMiscPtxt.Location = new System.Drawing.Point(0, 183);
             this.DMiscPtxt.MaxLength = 8;
             this.DMiscPtxt.Name = "DMiscPtxt";
             this.DMiscPtxt.Size = new System.Drawing.Size(100, 20);
@@ -46661,7 +46661,7 @@ namespace PSACompressor
             this.DMiscParam.Location = new System.Drawing.Point(0, 22);
             this.DMiscParam.MultiSelect = false;
             this.DMiscParam.Name = "DMiscParam";
-            this.DMiscParam.Size = new System.Drawing.Size(226, 155);
+            this.DMiscParam.Size = new System.Drawing.Size(226, 158);
             this.DMiscParam.TabIndex = 2;
             this.DMiscParam.TabStop = false;
             this.DMiscParam.UseCompatibleStateImageBehavior = false;
