@@ -36,6 +36,10 @@ namespace PSACompressor
 
 		private string[] CharPar = new string[2000];
 
+        /// <summary>
+        /// Name of PAC moveset file
+        /// Found used when selecting a PAC file to open from File > Open menu
+        /// </summary>
 		private string rd1;
 
 		private string rd2;
@@ -76,18 +80,48 @@ namespace PSACompressor
 
 		private int OvrFH;
 
+        /// <summary>
+        /// Contains a byte from PAC moveset file
+        /// Used to read in a byte from the file stream of the PAC moveset file
+        /// Seems to just be used as needed, no rhyme or reason to the variable name
+        /// </summary>
 		private int g;
 
-		private int h;
+        /// <summary>
+        /// Contains a byte from PAC moveset file
+        /// Used to read in a byte from the file stream of the PAC moveset file
+        /// Seems to just be used as needed, no rhyme or reason to the variable name
+        /// </summary>
+        private int h;
 
-		private int i;
+        /// <summary>
+        /// Contains a byte from PAC moveset file
+        /// Used to read in a byte from the file stream of the PAC moveset file
+        /// Seems to just be used as needed, no rhyme or reason to the variable name
+        /// </summary>
+        private int i;
 
-		private int j;
+        /// <summary>
+        /// Contains a byte from PAC moveset file
+        /// Used to read in a byte from the file stream of the PAC moveset file
+        /// Seems to just be used as needed, no rhyme or reason to the variable name
+        /// </summary>
+        private int j;
 
-		private int k;
+        /// <summary>
+        /// Contains a byte from PAC moveset file
+        /// Used to read in a byte from the file stream of the PAC moveset file
+        /// Seems to just be used as needed, no rhyme or reason to the variable name
+        /// </summary>
+        private int k;
 
 		private int m;
 
+        /// <summary>
+        /// Used to calculate a series of things involving bytes from PAC moveset file?
+        /// Often containing operands g, h, i, j, and k
+        /// Seems to just be used as needed, no rhyme or reason to the variable name
+        /// </summary>
 		private int n;
 
 		private int mov;
@@ -13048,14 +13082,30 @@ namespace PSACompressor
 			}
 		}
 
+        /// <summary>
+        /// Opens PAC moveset file after selecting the file
+        /// File > Open in file menu
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
 		private void OpenpacFile_FileOk(object sender, CancelEventArgs e)
 		{
+            // name of PAC moveset file selected
 			rd1 = OpenpacFile.FileName;
+
+            // read in PAC moveset file as stream
 			FileStream fileStream = new FileStream(rd1, FileMode.Open, FileAccess.Read);
+
+            // length of stream in bytes
 			long num = fileStream.Length;
+            
+            // Not quite sure what this does but it will definitely happen if the second if statement happens
 			if (num >= 24000)
 			{
-				g = fileStream.ReadByte();
+                // if n does not end up as 1095910144, it sets the length of the value of num to 0
+                // which means the next if statement will not evaluate and instead the file will not be able to be read
+                // no clue what this means or why it's needed though
+                g = fileStream.ReadByte();
 				h = fileStream.ReadByte();
 				i = fileStream.ReadByte();
 				j = fileStream.ReadByte();
@@ -13096,6 +13146,7 @@ namespace PSACompressor
 				fileStream.Close();
 				PacFileOpens();
 			}
+            // if not valid moveset file (length of file in bytes is not the proper length)
 			else
 			{
 				minitxt.Text = "This file cannot be read.";
