@@ -166,50 +166,107 @@ namespace PSACompressor
 
 		private TabPage EventEditMode;
 
+        /// <summary>
+        /// Listbox contains PSA code for selected Events sub tab (e.g. Specials, Sub Actions)
+        /// Events tab
+        /// </summary>
 		private ListBox EvList;
 
+        /// <summary>
+        /// Textbox contains description of selected PSA command
+        /// Events tab
+        /// </summary>
 		private TextBox EvDesText;
 
 		private TabControl EventTab;
 
 		private TabPage EvSp;
 
+        /// <summary>
+        /// Textbox contains offset location for selected Action code block (e.g. Entry, Exit)
+        /// Events > Specials tab
+        /// </summary>
 		private TextBox EvSpOffset;
 
+        /// <summary>
+        /// Combobox containing code blocks for selected Action (e.g. Entry, Exit)
+        /// Events > Specials tab
+        /// </summary>
 		private ComboBox EvSpCbList;
 
 		private Label EvSpListLabel;
 
+        /// <summary>
+        /// Combobox contains ids of all special actions (e.g. 112, 113)
+        /// Events > Specials tab
+        /// </summary>
 		private ComboBox EvSpCbID;
 
 		private Label EvSpIDLabel;
 
 		private TabPage EvSuba;
 
+        /// <summary>
+        /// Textbox contains name of animation associated with selected subaction
+        /// Event Sub Actions tab
+        /// </summary>
 		private TextBox EvSubaAnim;
 
 		private Label EvSubaAnimLabel;
 
+        /// <summary>
+        /// Textbox contains offset location for current subaction code block
+        /// Changes per subaction/per subaction code block (.e.g. Main has different offset than GFX)
+        /// Events > Sub Actions tab
+        /// </summary>
 		private TextBox EvSubaOffset;
 
+        /// <summary>
+        /// Button opens up form for selecting subaction animation flags for selected subaction
+        /// Events > Sub Actions tab
+        /// </summary>
 		private Button EvSubaAnimFlag;
 
+        /// <summary>
+        /// Combobox contains list of subaction code blocks (e.g. Main, GFX, SFX, Oher) for selected subaction
+        /// Events > Sub Actions tab
+        /// </summary>
 		private ComboBox EvSubaCbList;
 
 		private Label EvSubaListLabel;
 
 		private Label EvSubaIDLabel;
 
-		private ComboBox EvSubaCbID;
+        /// <summary>
+        /// Combobox contains list of all subaction ids
+        /// Events > Sub Actions tab
+        /// </summary>
+		private ComboBox EvSubaCbID; 
 
 		private TabPage EvRn;
 
+        /// <summary>
+        /// Textbox contains offset of currently viewed subroutine
+        /// Events > Sub Routines tab
+        /// </summary>
 		private TextBox EvRnOffset;
 
+        /// <summary>
+        /// Button creates a new subroutine
+        /// Events > Sub Routines tab
+        /// </summary>
 		private Button EvRnCreate;
 
+        /// <summary>
+        /// Button goes to specified subrouine in EvRnOfSele
+        /// Events > Sub Routines tab
+        /// </summary>
 		private Button EvRnOpen;
 
+        /// <summary>
+        /// Textbox specifies which subroutine to go to
+        /// Events > Sub Routines tab
+        /// </summary>
 		private TextBox EvRnOfSele;
 
 		private TabPage AtrEditMode;
@@ -222,18 +279,46 @@ namespace PSACompressor
 
 		private TextBox minitxt;
 
-		private Button EvPaste;
+        /// <summary>
+        /// Button to paste selected PSA code from EvList
+        /// Events tab
+        /// </summary>
+        private Button EvPaste;
 
+        /// <summary>
+        /// Button to copy selected PSA code from EvList
+        /// Events tab
+        /// </summary>
 		private Button EvCopy;
 
+        /// <summary>
+        /// Button to move selected PSA code instruction downwards in order in EvList
+        /// Events tab
+        /// </summary>
 		private Button EvDown;
 
+        /// <summary>
+        /// Button to move selected PSA code instruction upwards in order in EvList
+        /// Events tab
+        /// </summary>
 		private Button EvUp;
 
+        /// <summary>
+        /// Button to remove selected PSA code instruction from EvList
+        /// Events tab
+        /// </summary>
 		private Button EvRemove;
 
-		private Button EvModify;
+        /// <summary>
+        /// Button to modify selected PSA code instruction from EvList
+        /// Events tab
+        /// </summary>
+        private Button EvModify;
 
+        /// <summary>
+        /// Button to add new PSA code instruction to EvList
+        /// Events tab
+        /// </summary>
 		private Button EvAdd;
 
 		private Label EvSpOffsetLabel;
@@ -484,6 +569,10 @@ namespace PSACompressor
 
 		private CheckBox CmpInRn;
 
+        /// <summary>
+        /// Combobox -- Idk what this does and can't seem to get any values to populate
+        /// Events > Sub Routines tab
+        /// </summary>
 		private ComboBox EvRnOffTrace;
 
 		private ContextMenuStrip EvRnStrip;
@@ -500,6 +589,10 @@ namespace PSACompressor
 
 		private ToolStripMenuItem EvRnFullItemTrace;
 
+        /// <summary>
+        /// Combobox contains all previous gone to subroutines??? Not really sure
+        /// Events > Sub Routines tab
+        /// </summary>
 		private ComboBox EvRnOffCbList;
 
 		private CheckBox ExternalCmp;
