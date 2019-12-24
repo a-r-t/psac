@@ -388,6 +388,10 @@ namespace PSACompressor
 
 		private Label EvRnOffsetLabel;
 
+        /// <summary>
+        /// DataGridView of all attributes of a character (e.g. initial run speed, weight)
+        /// Attributes tab
+        /// </summary>
 		private DataGridView AtrEdList;
 
 		private TextBox AtrEdText;
@@ -396,6 +400,10 @@ namespace PSACompressor
 
 		private Label ArticleIDLabel;
 
+        /// <summary>
+        /// Combobox with list of all article ids
+        /// Articles tab
+        /// </summary>
 		private ComboBox ArticleIDCb;
 
 		private TabControl ArticleTab;
@@ -422,14 +430,27 @@ namespace PSACompressor
 
 		private Button ArtActAdd;
 
+        /// <summary>
+        /// Contains PSA code for selected action in selected article
+        /// Articles > Actions tab
+        /// </summary>
 		private ListBox ArtActList;
 
 		private TextBox ArtActText;
 
 		private Label ArtActOffsetLabel;
 
+        /// <summary>
+        /// Offset location for selected article's action
+        /// Articles > Actions tab
+        /// </summary>
 		private TextBox ArtActOffset;
 
+        /// <summary>
+        /// Article action code block list
+        /// I've been unable to make this visible in any test moveset I tried
+        /// I guess it was supposed to handle "Entry/Exit" code blocks but maybe those don't exist for articles?
+        /// </summary>
 		private ComboBox ArtActCbList;
 
 		private ComboBox ArtActId;
@@ -442,6 +463,10 @@ namespace PSACompressor
 
 		private Label ArtSubaAnimLabel;
 
+        /// <summary>
+        /// Offset location for selected article's action's subaction
+        /// Articles > Sub Actions tab
+        /// </summary>
 		private TextBox ArtSubaOffset;
 
 		private Button ArtSubaAnimFlag;
@@ -468,12 +493,21 @@ namespace PSACompressor
 
 		private Button ArtSubaAdd;
 
+        /// <summary>
+        /// Contains PSA code for selected subaction for selected action for selected article
+        /// Articles > Sub Actions tab
+        /// </summary>
 		private ListBox ArtSubaList;
 
 		private TextBox ArtSubaText;
 
 		private TextBox ArtParText;
-
+        
+        /// <summary>
+        /// DataGridView contains each article parameter name and corresponding value
+        /// (e.g. Mario's fireball has parameters for intial speed, angle)
+        /// Articles > Parameters tab
+        /// </summary>
 		private DataGridView ArtParList;
 
 		private DataGridViewTextBoxColumn AtrParListDataLabel;
@@ -482,26 +516,50 @@ namespace PSACompressor
 
 		private Label ArtParOffsetLabel;
 
+        /// <summary>
+        /// Offset location for selected article's parameters (floating points)
+        /// Articles > Parameters tab
+        /// </summary>
 		private TextBox ArtParOffset;
 
+        /// <summary>
+        /// Combobox for selecting which parameters to see of selected article
+        /// Articles > Parameters tab
+        /// </summary>
 		private ComboBox ArtParCbList;
 
 		private Label ArtParListLabel;
 
+        /// <summary>
+        /// List of offsets for each article
+        /// Articles > Data Offset tab
+        /// </summary>
 		private ListBox ArtDataList;
 
 		private TabControl DataTab;
 
 		private TabPage DataOffset;
 
+        /// <summary>
+        /// List of all offsets for data tab (e.g. where bone references section is located)
+        /// Data > Data Offset tab
+        /// </summary>
 		private ListBox DataOffsetList;
 
 		private TabPage DataTable;
 
+        /// <summary>
+        /// Not actually sure what info this holds, it always with just "data" and then has like "status" something or other
+        /// Data > Data Table tab
+        /// </summary>
 		private ListBox DataDTList;
 
 		private TabPage DataExRn;
 
+        /// <summary>
+        /// List of all external subroutines
+        /// Data > External Sub Routines tab
+        /// </summary>
 		private ListBox DataExrnList;
 
 		private ToolStripMenuItem Settingmenu;
@@ -516,12 +574,24 @@ namespace PSACompressor
 
 		private Label EvOvrOffsetLabel;
 
+        /// <summary>
+        /// Offset location of selected override
+        /// Events > Override tab
+        /// </summary>
 		private TextBox EvOvrOffset;
 
+        /// <summary>
+        /// Code Block selection to see action overrides for (Entry, Exit, or Pre)
+        /// Events > Override tab
+        /// </summary>
 		private ComboBox EvOvrCbList;
 
 		private Label EvOvrListLabel;
 
+        /// <summary>
+        /// Combobox for all action override ids that exist based on the code block selected (Entry, Exit, or Pre)
+        /// Events > Override tab
+        /// </summary>
 		private ComboBox EvOvrId;
 
 		private Label EvOvrIdLabel;
@@ -688,6 +758,10 @@ namespace PSACompressor
 
 		private ToolStripMenuItem EvParMoveB;
 
+        /// <summary>
+        /// For action overrides, if Pre is selected, this butotn appears and opens up a form for external action overrides?
+        /// Events > Override tab
+        /// </summary>
 		private Button EvPreSelExternal;
 
 		private ContextMenuStrip EvCopyStrip;
@@ -718,16 +792,42 @@ namespace PSACompressor
 
 		private SplitContainer DMiscSplit;
 
+        /// <summary>
+        /// TreeView of all sections of Data Misc (e.g. bone references, hand bones)
+        /// Data > Misc tab
+        /// </summary>
 		private TreeView DMiscList;
 
+        /// <summary>
+        /// Contains options for format for inserting value for a new Data Misc element in DMiscPtxt (sometimes it shows up)
+        /// Has things like "Int", "HexValue"
+        /// Data > Misc tab
+        /// </summary>
 		private ComboBox DMiscCb;
 
+        /// <summary>
+        /// After making a change to DMiscPtxt, this button commits the change
+        /// Data > Misc tab
+        /// </summary>
 		private Button DMiscDone;
 
+        /// <summary>
+        /// Shows value that you can change for various things like hand bones, bone floats...basically anything in that Misc section
+        /// Data > Misc tab
+        /// </summary>
 		private TextBox DMiscPtxt;
 
+        /// <summary>
+        /// ListView of all selected params in a Data Misc tree section
+        /// Usually looks like: Data0 ... 0x1, Data1 ... 0x4
+        /// Data > Misc tab
+        /// </summary>
 		private ListView DMiscParam;
 
+        /// <summary>
+        /// Offset location of selected Data Misc element
+        /// Data > Misc tab
+        /// </summary>
 		private TextBox DMiscOffset;
 
 		private Label DMiscOffsetLabel;
