@@ -10,12 +10,28 @@ namespace PSACompressor
 {
 	public class MainForm : Form
 	{
+        /// <summary>
+        /// folder location where PSA program started up from
+        /// </summary>
 		private string path;
 
+        /// <summary>
+        /// int array of size 148449
+        /// array tds contains the first 32 four sets of bytes in the file as base 10 numbers, while this one contains the rest of the file
+        /// appears the max size of this array matches the file size limit that PSA will not open past (about 593kb)
+        /// </summary>
 		private int[] alm = new int[148449];
 
+        /// <summary>
+        /// int array of size 32
+        /// contains first 32 four sets of bytes of the file as base 10 numbers
+        /// e.g. A2 34 B4 91 would be one set of four bytes.
+        /// </summary>
 		private int[] tds = new int[32];
 
+        /// <summary>
+        /// Name of moveset PAC file currently being worked with
+        /// </summary>
 		private string editFilePath;
 
 		private string[] AtrEtxd = new string[185];
@@ -118,9 +134,10 @@ namespace PSACompressor
 		private int m;
 
         /// <summary>
-        /// Used to calculate a series of things involving bytes from PAC moveset file?
+        /// Used to convert a series of bytes to a base ten number
         /// Often containing operands g, h, i, j, and k
-        /// Seems to just be used as needed, no rhyme or reason to the variable name
+        /// Seems to just be used as needed, no rhyme or reason to the variable name.
+        /// n = j + (i << 8) + (h << 16) + (g << 24);
         /// </summary>
 		private int n;
 
@@ -128,6 +145,10 @@ namespace PSACompressor
 
 		private int rmv;
 
+        /// <summary>
+        /// Array of ints containing 512 indexes
+        /// No idea whawt this stands for at the moment
+        /// </summary>
 		private int[] nonam = new int[512];
 
 		private int an1;
@@ -196,6 +217,10 @@ namespace PSACompressor
 
 		private CheckBox NameNoneCmp;
 
+        /// <summary>
+        /// On the Compress tab it's the giant textbox that I've never seen populated with text before
+        /// To the left of the checkboxes
+        /// </summary>
 		private TextBox CmpText;
 
 		private TabPage EventEditMode;
@@ -749,9 +774,21 @@ namespace PSACompressor
 
 		private ToolStripMenuItem RnTraceCpy;
 
+        /// <summary>
+        /// opens/parses moveset file
+        /// this method is called by OpenpacFile_FileOk (which is when you do file > open and click a moveset) after doing some setup work
+        /// tds is first 32 four set of bytes as base ten numbers in file
+        /// alm is the rest of the file ^
+        /// j is the number of indexes used up in alm currently
+        /// </summary>
 		private void PacFileOpens()
 		{
+            // an1 is the total space of the moveset file (in kb) I believe
 			an1 = j * 4;
+
+            // not sure what the deal with this is
+            // if the base ten number in tds is less than 0 or greater than j...it sets the 24th bit to -1...
+            // can't get this to activate on any movesets I've tested on so ignoring for now...
 			for (i = 25; i < 29; i++)
 			{
 				if (tds[i] < 0 || tds[i] >= an1)
@@ -760,10 +797,14 @@ namespace PSACompressor
 					break;
 				}
 			}
+
+            // I don't think a textbox can even be set to null in C#, making this pointless
 			if (CmpText.Text == null)
 			{
+                Console.WriteLine("HI");
 				CmpText.Text = "";
 			}
+            // What who cares??? Why???? It's a textbox and you have full control over what text is put there????
 			else if (CmpText.Text.Length > 88)
 			{
 				CmpText.Text = "";
@@ -13098,26 +13139,36 @@ namespace PSACompressor
 
             // length of stream in bytes
 			long num = fileStream.Length;
-            
-            // Not quite sure what this does but it will definitely happen if the second if statement happens
+
+            // Pretty sure this confirms that the file is a moveset file based on the first four bytes in the file
+            // A unique byte sequence identifier maybe?
 			if (num >= 24000)
 			{
                 // if n does not end up as 1095910144, it sets the length of the value of num to 0
                 // which means the next if statement will not evaluate and instead the file will not be able to be read
-                // no clue what this means or why it's needed though
                 g = fileStream.ReadByte();
 				h = fileStream.ReadByte();
 				i = fileStream.ReadByte();
 				j = fileStream.ReadByte();
+                // converts bytes in g, h, i, and j to base ten number
 				n = j + (i << 8) + (h << 16) + (g << 24);
 				if (n != 1095910144)
 				{
 					num = 0L;
 				}
 			}
-			if (num <= 593920 && num >= 50000)
+            // ensures length of PAC moveset file is valid
+            // I guess it won't read in anything over 593920 bytes.
+            // Why?
+            // Mortimers says 593..92 is the limit for moveset files in PM
+            // why oh why is this limit set in a moveset editing application, talk about unscalable
+            if (num <= 593920 && num >= 50000)
 			{
+                // set to name of moveset PAC file
 				editFilePath = rd1;
+
+                // sets of four bytes are converted to a base 10 number and stored in array tds from indexes 1-32
+                // index 0 of tds contains the value from n previously (the first four bytes in file converted to base 10 number)
 				for (k = 1; k < 32; k++)
 				{
 					g = fileStream.ReadByte();
@@ -13129,8 +13180,13 @@ namespace PSACompressor
 				tds[0] = n;
 				i = 0;
 				j = 0;
+
+                // loops through each byte of the rest of the moveset file
 				while ((g = fileStream.ReadByte()) != -1)
 				{
+                    // nonam array indexes 0 - 3 are populated with the file's next four bytes
+                    // then, array alm's next index is set to the base ten number of those four bytes
+                    // then the cycle continues as it reads in the entire file
 					if (i >= 3)
 					{
 						alm[j] = g + (nonam[2] << 8) + (nonam[1] << 16) + (nonam[0] << 24);
@@ -13142,8 +13198,16 @@ namespace PSACompressor
 						nonam[i] = g;
 						i++;
 					}
-				}
-				fileStream.Close();
+                }
+
+                fileStream.Close();
+
+                /*
+                 * going into this method:
+                 * tds is the first 32 four set of bytes in the file as base 10 numbers
+                 * alm is the rest of the file after tds
+                 * j is equal to the number of indexes used in alm (alm array has a limit)
+                 */
 				PacFileOpens();
 			}
             // if not valid moveset file (length of file in bytes is not the proper length)
