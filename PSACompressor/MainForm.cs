@@ -151,6 +151,9 @@ namespace PSACompressor
         /// </summary>
 		private int[] nonam = new int[512];
 
+        /// <summary>
+        /// total size of the moveset file (in kb) (I think)
+        /// </summary>
 		private int an1;
 
 		private int an2;
@@ -883,7 +886,7 @@ namespace PSACompressor
         /// </summary>
 		private void PacFileOpens()
 		{
-            // an1 is the total space of the moveset file (in kb) I believe
+            // an1 is the total size of the moveset file (in kb) I believe
 			an1 = j * 4;
 
             // not sure what the deal with this is
@@ -898,7 +901,7 @@ namespace PSACompressor
 				}
 			}
 
-            // I don't think a textbox can even be set to null in C#, making this pointless
+            // Pointless
 			if (CmpText.Text == null)
 			{
                 Console.WriteLine("HI");
@@ -909,6 +912,8 @@ namespace PSACompressor
 			{
 				CmpText.Text = "";
 			}
+
+            // resets a bunch of form controls to prepare them to be loaded
 			DataDTList.Items.Clear();
 			DataExrnList.Items.Clear();
 			ArtDataList.Items.Clear();
@@ -949,10 +954,16 @@ namespace PSACompressor
 			EvList.Items.Clear();
 			EvOvrCbList.Items.Clear();
 			DMiscList.Nodes.Clear();
+
+            // just like the above one, index 24 of tds must be pretty significant...not sure what it means though
+            // none of my test movesets got this to activate...
 			if (tds[26] >= 37000)
 			{
 				tds[24] = 0;
 			}
+
+            // seems to signifiy it's a moveset PSA???
+            // triggers for all my test movesets so far
 			if (tds[24] > 8192 && tds[24] < an1 + 128)
 			{
 				md = tds[25] / 4;
@@ -960,15 +971,20 @@ namespace PSACompressor
 				k = tds[27] + tds[28];
 				dat = 0;
 				i = md + par + k * 2;
+
+                // haven't gotten this to trigger on a moveset
 				if (tds[24] - tds[25] - tds[26] * 4 > 8000)
 				{
-					i = 0;
+                    i = 0;
 				}
+
+                // triggers on all test movesets
 				if (i > 2024 && i < an1 / 4)
 				{
-					if (alm[i - 1] >> 16 == 0)
+                    // triggers on all test movesets
+                    if (alm[i - 1] >> 16 == 0)
 					{
-						rd3 = "";
+                        rd3 = "";
 						j = 4;
 						n = 0;
 						while (n < 48)
@@ -1000,7 +1016,13 @@ namespace PSACompressor
 						}
 						m = md + par - 2;
 						h = 0;
-						while (h < k)
+
+                        /*
+                         * seems that this while loop is for populating:
+                         * DataDTList -- list of Data Table elements in Data > Data Table tab
+						 * DataExrnList -- list of external subroutines in Data > External Sub routines tab
+                         */
+                        while (h < k)
 						{
 							rd1 = "";
 							m += 2;
@@ -1036,6 +1058,7 @@ namespace PSACompressor
 								}
 								if (dat == 0)
 								{
+                                    // Only happens when Fighter.pac is opened
 									if (rd3 == "Fighter")
 									{
 										if (rd1 == "dataCommon")
@@ -1043,9 +1066,10 @@ namespace PSACompressor
 											dat = alm[m] / 4;
 										}
 									}
+                                    // Only happens when moveset file is opened
 									else if (rd1 == "data")
 									{
-										dat = alm[m] / 4;
+                                        dat = alm[m] / 4;
 									}
 								}
 								if (h < tds[27])
@@ -1084,7 +1108,9 @@ namespace PSACompressor
 			if (an1 != 0)
 			{
 				m = tds[25] - 1;
-				if (rd3 == "Fighter")
+
+                // This only happens for when Fighter.pac gets opened
+                if (rd3 == "Fighter")
 				{
 					if (dat < md)
 					{
@@ -1123,6 +1149,7 @@ namespace PSACompressor
 					{
 						an1 = 0;
 					}
+                    // I believe this only happens for when Fighter.pac gets opened
 					if (an1 != 0)
 					{
 						for (i = 0; i < 274; i++)
@@ -1177,10 +1204,12 @@ namespace PSACompressor
 						spas = 0;
 					}
 				}
+                // triggers when moveset is opened
 				else
 				{
 					if (dat < md)
 					{
+                        // seems to trigger for all test movesets
 						for (i = 0; i < 27; i++)
 						{
 							if (alm[dat + i] < 0 && alm[dat + i] > m)
@@ -1212,10 +1241,12 @@ namespace PSACompressor
 					}
 					if (an1 != 0)
 					{
+                        // only for IceClimbers base moveset?
 						if (rd3 == "FitPopo")
 						{
 							an2 = 2;
 						}
+                        // Every other moveset
 						else
 						{
 							an2 = 1;
@@ -1223,6 +1254,8 @@ namespace PSACompressor
 						i = 0;
 						fnt = 2;
 						CharPar[0] = "";
+
+                        // reads in config files from CharSpecific folder
 						if (Directory.Exists(path + "\\CharSpecific\\") && File.Exists(path + "\\CharSpecific\\" + rd3 + ".txt"))
 						{
 							StreamReader streamReader = new StreamReader(path + "\\CharSpecific\\" + rd3 + ".txt", Encoding.GetEncoding("UTF-8"));
@@ -1258,6 +1291,7 @@ namespace PSACompressor
 											{
 												k = 120;
 											}
+                                            // pretty sure this entire thing is for reading in article ids
 											while ((rd1 = streamReader.ReadLine()) != null)
 											{
 												if (rd1.Length >= 7)
@@ -1540,14 +1574,20 @@ namespace PSACompressor
 							asc[i] = 16777216;
 							i++;
 						}
+
+                        // gets attributes?
 						for (i = 0; i < 185; i++)
 						{
+                            // gets name of attribute
 							rd1 = AtrEdList[0, i].Value.ToString();
-							if (rd1[0] == '*')
+
+                            // if attribute is an int (* in front of it)
+                            if (rd1[0] == '*')
 							{
 								AtrEdList[1, i].Value = alm[i].ToString();
 								AtrEdList[2, i].Value = alm[i + 185].ToString();
 							}
+                            // if attribute is a floating point
 							else
 							{
 								bitf = BitConverter.GetBytes(alm[i]);
