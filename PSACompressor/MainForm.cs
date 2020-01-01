@@ -50,6 +50,9 @@ namespace PSACompressor
 
         private string[] ReqEtxd = new string[151];
 
+        /// <summary>
+        /// string array of size 2000...not sure what it's for yet
+        /// </summary>
         private string[] CharPar = new string[2000];
 
         /// <summary>
@@ -151,6 +154,7 @@ namespace PSACompressor
 
         /// <summary>
         /// total size of the moveset file (in kb) (I think)
+        /// in PacFileOpens method, if set to 0, PSA will be unable to read in file
         /// </summary>
 		private int an1;
 
@@ -1716,6 +1720,7 @@ namespace PSACompressor
                         DataTab.Enabled = true;
                         if (SettingReadMisc.Checked)
                         {
+                            // gets model visibility data
                             if (alm[dat + 1] >= 8096 && alm[dat + 1] < tds[25])
                             {
                                 TreeNode treeNode = new TreeNode("ModelVisibility");
@@ -1726,6 +1731,7 @@ namespace PSACompressor
                                     g = alm[h + 1];
                                     if (g > 0 && g < 256)
                                     {
+                                        // gets "hidden" model changer section
                                         if (alm[k] >= 8096 && alm[k] < tds[25])
                                         {
                                             treeNode.Nodes.Add(new TreeNode("Hidden"));
@@ -1748,6 +1754,7 @@ namespace PSACompressor
                                                 }
                                             }
                                         }
+                                        // gets "visible" model changer section
                                         if (alm[k + 1] >= 8096 && alm[k + 1] < tds[25])
                                         {
                                             treeNode.Nodes.Add(new TreeNode("Visible"));
@@ -1772,6 +1779,7 @@ namespace PSACompressor
                                         }
                                     }
                                 }
+                                // gets model changers data sections
                                 g = alm[h + 3];
                                 if (alm[h + 2] >= 8096 && alm[h + 2] < tds[25] && g > 0 && g < 256)
                                 {
@@ -1782,6 +1790,8 @@ namespace PSACompressor
                                 }
                                 DMiscList.Nodes.Add(treeNode);
                             }
+
+                            // gets misc section stuff 
                             if (alm[dat + 4] >= 8096 && alm[dat + 4] < tds[25])
                             {
                                 TreeNode treeNode2 = new TreeNode("MiscSection");
@@ -1999,6 +2009,7 @@ namespace PSACompressor
                                 }
                                 DMiscList.Nodes.Add(treeNode6);
                             }
+                            // I don't understand this bonefloats2 section...
                             if (alm[dat + 17] >= 8096 && alm[dat + 17] < tds[25])
                             {
                                 TreeNode treeNode7 = new TreeNode("BoneFloats2");
@@ -2015,6 +2026,7 @@ namespace PSACompressor
                                         treeNode7.Nodes.Add(new TreeNode("Data" + i));
                                     }
                                 }
+                                // every moveset I tested (I tested A LOT) trigger this one...
                                 else if (alm[dat + 17] < alm[dat + 18] && alm[dat + 18] < tds[25])
                                 {
                                     g = (alm[dat + 18] - alm[dat + 17]) / 28;
@@ -2033,6 +2045,7 @@ namespace PSACompressor
                                 }
                                 DMiscList.Nodes.Add(treeNode7);
                             }
+                            // didn't even know there was a bonefloats3 -- which character has it?
                             if (alm[dat + 23] >= 8096 && alm[dat + 23] < tds[25])
                             {
                                 TreeNode treeNode8 = new TreeNode("BoneFloats3");
@@ -2161,6 +2174,7 @@ namespace PSACompressor
                                     i++;
                                 }
                             }
+                            // I'm 99.99% positive this section only applies to Ice Climbers -- maybe someone else but idk I can't find them
                             if (an5 == 0)
                             {
                                 TreeNode treeNode13 = new TreeNode("ExtraDatas");
@@ -2342,9 +2356,12 @@ namespace PSACompressor
                                             an2++;
                                             if (an2 == an3)
                                             {
+                                                // rd4 = article.location
                                                 rd4 = CharPar[i].Substring(0, 3);
                                                 g = Convert.ToInt32(rd4, 16);
-                                                an4 = alm[dat + g / 4] / 4;
+                                                an4 = alm[dat + g / 4] / 4; // article data offset?
+
+                                                // not sure what this does yet
                                                 if (alm[an4 + 3] > 8096 && alm[an4 + 3] < tds[25])
                                                 {
                                                     rd4 = CharPar[i].Substring(4);
@@ -2602,6 +2619,7 @@ namespace PSACompressor
                     }
                 }
             }
+            // this entire freaking time, if at anytime an1 is set to 0 in the above code, PSAC determines it cannot read the file
             if (an1 != 0)
             {
                 if (tds[24] % 4 == 0)
