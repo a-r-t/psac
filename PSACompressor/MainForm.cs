@@ -197,10 +197,16 @@ namespace PSACompressor
 
         private int snstr;
 
+        /// <summary>
+        /// article parameters location
+        /// </summary>
         private int artpo;
 
         private int artpr;
 
+        /// <summary>
+        /// article data location
+        /// </summary>
         private int artdt;
 
         private int efdts;
@@ -1728,7 +1734,7 @@ namespace PSACompressor
                                 if (alm[h] >= 8096 && alm[h] < tds[25])
                                 {
                                     k = alm[h] / 4;
-                                    g = alm[h + 1];
+                                    g = alm[h + 1]; // number of bone switches?
                                     if (g > 0 && g < 256)
                                     {
                                         // gets "hidden" model changer section
@@ -2737,11 +2743,20 @@ namespace PSACompressor
             }
         }
 
+        /// <summary>
+        /// this parases a PSA command param value
+        /// </summary>
         private void EventReadVR()
         {
+            //Console.WriteLine("n: " + n);
+            //Console.WriteLine("alm[n]: " + alm[n]);
+            // float value
+            // so this happens AFTER the variable type/number is determined
             if (alm[n] == 1)
             {
                 rd1 += $"{(decimal)alm[n + 1] / 60000m:0.0####}";
+                //Console.WriteLine("Idk: " + rd1);
+                //Console.WriteLine($"{(decimal)alm[n + 1] / 60000m:0.0####}");
             }
             else if (alm[n] == 3)
             {
@@ -2760,6 +2775,8 @@ namespace PSACompressor
             }
             else if (alm[n] == 5)
             {
+                //Console.WriteLine("Get Variable");
+                //Console.WriteLine(alm[n + 1]);
                 if (((alm[n + 1] >> 28) & 0xF) > 2 || ((alm[n + 1] >> 24) & 0xF) > 2)
                 {
                     rd1 = rd1 + "5x" + alm[n + 1].ToString("X");
@@ -2795,20 +2812,25 @@ namespace PSACompressor
             {
                 an1 = ((alm[n + 1] >> 16) & 0xFFFF);
                 an2 = (alm[n + 1] & 0xFFFF);
+                // if an1 is 0, it's normal, if it's 32768 (8000 in hex), I guess it's a Not
                 if (an1 == 32768 || an1 == 0)
                 {
+                    // adds a not flag to the requirement
                     if (an1 >= 1)
                     {
                         rd1 += "Not ";
                     }
+                    // first requirements are 0 - 80 ... 128 is 80 in hex
                     if (an2 < 128)
                     {
                         rd1 += ReqEtxd[an2];
                     }
+                    // the rest of the requirements are 270F - 2725 -- 9999 is 270F and 10021 is 2725
                     else if (an2 >= 9999 && an2 <= 10021)
                     {
                         rd1 += ReqEtxd[an2 - 9871];
                     }
+                    // otherwise, requirement is unknown
                     else
                     {
                         rd1 += an2.ToString("X");
@@ -2833,8 +2855,15 @@ namespace PSACompressor
             }
         }
 
+        /// <summary>
+        /// Parses Psa Instruction
+        /// j holds location to instruction
+        /// mov starts at 0
+        /// </summary>
         private void EveListstring()
         {
+            //ElvEtxd.ToList().ForEach(Console.WriteLine);
+
             if (alm[j] == -86052851)
             {
                 rd1 = "ERROR DATA(FADEF00D)";
@@ -2847,6 +2876,11 @@ namespace PSACompressor
             }
             n = alm[j];
             an5 = ((n >> 16) & 0xFFFF);
+            //Console.WriteLine("Parsing Command");
+            //Console.WriteLine(n / 4);
+            //Console.WriteLine(n.ToString("X8"));
+
+            // if command is nested, mov is decremented
             if (an5 == 5 || an5 == 13 || an5 == 14 || an5 == 15 || an5 == 17 || an5 == 18 || an5 == 19)
             {
                 mov--;
@@ -2859,11 +2893,15 @@ namespace PSACompressor
                     rd1 += "    ";
                 }
             }
+            // if command is not nested or an end/begin of some kind, it's not nested anymore? idk, not needed since
+            // nesting can be done once entire thing is read in
             if (an5 == 4 || an5 == 10 || an5 == 13 || an5 == 14 || an5 == 16 || an5 == 17 || an5 == 18)
             {
                 mov++;
             }
             i = 0;
+            // this might be finding the index of the proper command in the config file?
+            // yes it is
             while (EveEtid[i] != 0 && n != EveEtid[i])
             {
                 i++;
@@ -2873,10 +2911,16 @@ namespace PSACompressor
                     break;
                 }
             }
+            // if command is recognized, get command name
+            // rd2 = command name (e.g. Execute Loop, Bit Variable Clear, etc)
             if (n == EveEtid[i])
             {
                 rd2 = EveEtxd[i * 4 + 1];
             }
+            // if command is not found (such as in Mario's fireball concurrent loop command 168296448 aka 0A080000
+            // the else just converts it to a hex value, the else if directly below this comment does some weird thing...
+            // result can be seen by looking in a clean Brawl Mario's subrouine for 1E17C ... idk the point of it
+            // e.g. it shows "Synchronous Timer(+E05C)
             else if (ViewEvPlus.Checked)
             {
                 i = 0;
@@ -2908,6 +2952,8 @@ namespace PSACompressor
             {
                 rd2 = n.ToString("X8");
             }
+
+            // not a clue what this does, may not need it?
             g = 0;
             while (ElvEtid[g] != 0 && n != ElvEtid[g])
             {
@@ -2936,7 +2982,11 @@ namespace PSACompressor
                     }
                 }
             }
+            // command name plus the tabbing
             rd1 += rd2;
+
+            // if command is 70100 -- subroutine
+            // I believe this checks if subroutine points to an external subroutine or not -- either way not something I'm concerned with atm
             if (n == 459008)
             {
                 n = alm[j + 1] / 4;
@@ -2982,6 +3032,9 @@ namespace PSACompressor
                 rd1 += ",";
                 return;
             }
+
+            // if command is 0D000200 -- Concurrent Infinite Loop
+            // same thing with the checking for external...we don't need this right now
             if (n == 218104320)
             {
                 n = alm[j + 1] / 4;
@@ -3030,15 +3083,23 @@ namespace PSACompressor
                 rd1 += ",";
                 return;
             }
+
+            // number of params in instruction
             k = ((n >> 8) & 0xFF);
+
+            // if 0 params, add a colon to the command name for whatever reason
             if (k == 0)
             {
+                //Console.WriteLine("ZERO PARAMS");
                 rd1 += ":";
             }
+            // if g is less than FFFF -- not really sure what g is
             else if (g < 65535)
             {
                 rd3 = ElvEtxd[g];
                 rd2 = ElvEtxd[g].Substring(2);
+                //Console.WriteLine(rd3);
+                //Console.WriteLine(rd2);
                 if (rd3[0] == '0')
                 {
                     rd3 = rd3.Substring(1, 1);
@@ -3049,6 +3110,7 @@ namespace PSACompressor
                 }
                 if (rd3[0] == '1')
                 {
+                    //Console.WriteLine("rd3[0] == 1");
                     n = alm[j + 1] / 4;
                     rd1 += " ";
                     fnt = 0;
@@ -3501,6 +3563,7 @@ namespace PSACompressor
                     n += 2;
                 }
             }
+            //Console.WriteLine(rd1);
         }
 
         private void Delasc()
@@ -5903,9 +5966,14 @@ namespace PSACompressor
             }
         }
 
+        /// <summary>
+        /// Populates datagridview of article floating points (parameters) with their values
+        /// </summary>
         private void ArtParView()
         {
             ArtParOffset.Text = "0x" + (artpo * 4).ToString("X");
+            // no idea what h is, but it doesn't seem to be zero often because I can't trigger it
+            // h might be how many param values there are?
             if (h == 0)
             {
                 k = artpo * 4;
@@ -15187,6 +15255,11 @@ namespace PSACompressor
             }
         }
 
+        /// <summary>
+        /// Gets PSA code for an action
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void EvSpCbID_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (EvSpCbID.SelectedIndex == -1)
@@ -15291,12 +15364,18 @@ namespace PSACompressor
             }
         }
 
+        /// <summary>
+        /// gets psa commands when subaction is changed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void EvSubaCbID_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (EvSubaCbID.SelectedIndex == -1)
             {
                 EvSubaCbID.SelectedIndex = sid;
             }
+            // not a clue what is going on here -- animation flags maybe?
             else if (AnimAutoSave.Checked && EvSubaAnim.Text != rdn)
             {
                 EvSubaAnim.Enabled = false;
@@ -15319,24 +15398,28 @@ namespace PSACompressor
             {
                 EvSubaCbList.SelectedIndex = slist;
             }
-            h = EvSubaCbID.SelectedIndex;
-            g = EvSubaCbList.SelectedIndex;
+            h = EvSubaCbID.SelectedIndex; // subaction id
+            g = EvSubaCbList.SelectedIndex; // code block id
             sid = h;
             slist = g;
+
+            // if codeblock selected is 0-3 (main, gfx, sfx, other)
             if (g < 4)
             {
                 n = alm[dat + 12 + g] / 4;
             }
+            // not sure how another codeblock would be selectable?
             else
             {
                 n = alm[dat + 27 + g] / 4;
             }
-            i = alm[n + h];
+            // gets commands, same as the action one before
+            i = alm[n + h]; // this is the location of the subaction code block starting
             EvSubaOffset.Text = "0x" + i.ToString("X");
             if (EventTab.SelectedIndex == 1)
             {
                 EvList.Items.Clear();
-                j = i / 4;
+                j = i / 4; // location where code block's instructions start
                 mov = 0;
                 if (j >= stf && j < md)
                 {
@@ -15348,6 +15431,8 @@ namespace PSACompressor
                     }
                 }
             }
+
+            // I think this is animation name
             k = alm[dat] / 4 + 1 + h * 2;
             if (alm[k] == 0)
             {
@@ -15358,6 +15443,7 @@ namespace PSACompressor
             j = alm[k] / 4;
             EvSubaAnim.Text = "";
             rdn = "";
+            // converts animation name ints to string
             if (j >= stf && j < md)
             {
                 i = 0;
@@ -15507,6 +15593,11 @@ namespace PSACompressor
             }
         }
 
+        /// <summary>
+        /// Get psa code from subroutine (go button)
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void EvRnOpen_Click(object sender, EventArgs e)
         {
             if (EvRnOfSele.Text.Length > 3)
@@ -15627,13 +15718,26 @@ namespace PSACompressor
             }
         }
 
+        /// <summary>
+        /// create a new subroutine button click event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void EvRnCreate_Click(object sender, EventArgs e)
         {
             EvList.Items.Clear();
+            Console.WriteLine(stf);
+
+            // this is how stf is calculated -- idk what it means though
+            Console.WriteLine((2014 + spas * 2));
+
+            // for each byte from stf to the data section size in words...?
+            Console.WriteLine(md);
             for (j = stf; j < md; j++)
             {
-                if (alm[j] == -86052851)
+                if (alm[j] == -86052851) // if that word is equal to FFFF FFFF FADE F00D (which I believe signifies no data is put there...it's free space)
                 {
+                    // looks like it's looking for at least 4 words of free space after the location of j
                     for (i = j + 1; i <= j + 3; i++)
                     {
                         if (alm[i] != -86052851)
@@ -15660,10 +15764,14 @@ namespace PSACompressor
                 alm[j + 2] = 0;
                 alm[j + 3] = 0;
             }
+            // h is the value where the new subroutine's location is
             h = j * 4;
+            Console.WriteLine($"Next subroutine value: {h}");
             mov = 0;
             EvRnOffset.Text = "0x" + h.ToString("X");
+            Console.WriteLine(j);
             EveListstring();
+            Console.WriteLine(rd1);
             EvList.Items.Add(rd1);
             if (j == md)
             {
@@ -15672,6 +15780,11 @@ namespace PSACompressor
             }
         }
 
+        /// <summary>
+        /// action override combo box changes -- should load in action override psa commands specified
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void EvOvrId_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (EvOvrCbList.SelectedIndex == -1 || EvOvrId.SelectedIndex == -1)
@@ -15769,6 +15882,9 @@ namespace PSACompressor
             }
             EvList.Items.Clear();
             j = h / 4;
+            //Console.WriteLine(n);
+            //Console.WriteLine(h);
+            //Console.WriteLine(j);
             mov = 0;
             if (j >= stf && j < md)
             {
@@ -15781,6 +15897,12 @@ namespace PSACompressor
             }
         }
 
+        /// <summary>
+        /// Code block for action override (entry, exit, pre)
+        /// You can't even select an action until this is selected first
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void EvOvrCbList_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (EvOvrCbList.SelectedIndex == -1)
@@ -19332,10 +19454,16 @@ namespace PSACompressor
             }
         }
 
+        /// <summary>
+        /// When selected index changes in the tabs (when you change tabs) in the outer tab section (Events, Data, etc)
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ModeChange_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (ModeChange.SelectedIndex == 1)
             {
+                // events tab goes here
                 if (EventTab.SelectedIndex == 2 && EvRnOffset.Text.Length > 5)
                 {
                     EvList.Items.Clear();
@@ -19353,6 +19481,7 @@ namespace PSACompressor
             }
             else if (ModeChange.SelectedIndex == 3)
             {
+                // articles tab goes here
                 if (ArtActId.Items.Count > 0)
                 {
                     i = ArtActId.SelectedIndex;
@@ -19493,6 +19622,7 @@ namespace PSACompressor
             }
             else
             {
+                // attributes and data tab go here
                 if (ModeChange.SelectedIndex != 4 || DMiscParam.Items.Count <= 0 || DMiscList.SelectedNode == null)
                 {
                     return;
@@ -19562,6 +19692,11 @@ namespace PSACompressor
             }
         }
 
+        /// <summary>
+        /// When changing to a new article number
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ArticleIDCb_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (ArticleIDCb.SelectedIndex == -1)
@@ -19581,6 +19716,7 @@ namespace PSACompressor
             ArtSubaText.Text = "";
             ArtSubaCbList.Text = "";
             ArtParOffset.Text = "";
+            // No Select
             if (ArticleIDCb.SelectedIndex == 0)
             {
                 ArtSubaAnim.Text = "";
@@ -19589,6 +19725,7 @@ namespace PSACompressor
                 while (CharPar[i].Length >= 7)
                 {
                     rd1 = CharPar[i].Substring(4, 3);
+                    // this loads in the offsets for the no selects
                     if (rd1 == "Par")
                     {
                         rd1 = CharPar[i].Substring(0, 3);
@@ -19613,6 +19750,7 @@ namespace PSACompressor
                         ArtParCbList.Items.Add(rd1);
                         ArtDataList.Items.Add("0x" + n.ToString("X3") + " " + rd1 + " - 0x" + alm[dat + n / 4].ToString("X"));
                     }
+                    // this loads in the offsets for the no selects' "extra data"
                     else if (CharPar[i][0] == 'X')
                     {
                         if (!Uri.IsHexDigit(CharPar[i][1]))
@@ -19672,6 +19810,7 @@ namespace PSACompressor
                     i++;
                 }
             }
+            // article ids beyond No Select
             else
             {
                 g = ArticleIDCb.SelectedIndex;
@@ -19696,6 +19835,7 @@ namespace PSACompressor
                                 rd1 = CharPar[i].Substring(0, 3);
                                 g = Convert.ToInt32(rd1, 16);
                                 artdt = alm[dat + g / 4] / 4;
+                                // this gets number of article actions -- which I already have from config
                                 if (CharPar[j + 1].Length <= 5)
                                 {
                                     rd1 = CharPar[j + 1];
@@ -19737,7 +19877,7 @@ namespace PSACompressor
                                     if (fnt == 0)
                                     {
                                         h = Convert.ToInt32(rd2, 16);
-                                        if (h >= 1 && alm[artdt + 5] > 8096 && alm[artdt + 5] < tds[25])
+                                        if (h >= 1 && alm[artdt + 5] > 8096 && alm[artdt + 5] < tds[25]) // I guess if this isn't true, there are no article actions?
                                         {
                                             for (k = 0; k < h; k++)
                                             {
@@ -19781,6 +19921,9 @@ namespace PSACompressor
                                 ArtDataList.Items.Add("0x028 CollisionData - 0x" + alm[artdt + 10].ToString("X"));
                                 ArtDataList.Items.Add("0x02C Data2 - 0x" + alm[artdt + 11].ToString("X"));
                                 ArtDataList.Items.Add("---------------------------");
+
+                                // pretty sure this part loads in the parameters for the article (floating points)
+                                // TODO: come back to this later, it's possible I missed some things for characters that are non normal (like Kirby)
                                 k = 40;
                                 fntb[0] = 0;
                                 ArtActCbList.Visible = false;
@@ -19927,6 +20070,8 @@ namespace PSACompressor
                                                         ArtDataList.Items.Add("0x" + CharPar[i] + " - 0x" + alm[artdt + n / 4].ToString("X"));
                                                     }
                                                 }
+                                                // TODO: olimar apparently has an "exit" code block for one of his articles
+                                                // which has no offset so there's no psa code in it...but it exists
                                                 else if (CharPar[i] == "034 ActionExit" && fntb[0] == 0)
                                                 {
                                                     fntb[0] = 1;
@@ -19994,6 +20139,11 @@ namespace PSACompressor
             ArtSubaAnim.Text = "";
         }
 
+        /// <summary>
+        /// when action combobox is changed (this should load in psa commands)
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ArtActId_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (ArtActId.SelectedIndex == -1)
@@ -20840,12 +20990,13 @@ namespace PSACompressor
             {
                 return;
             }
-            i = ArtSubaId.SelectedIndex;
+            i = ArtSubaId.SelectedIndex; // i is the subaction id
             g = 1;
             k = alm[artdt + 4] / 4 + 1 + i * 2;
             if (k > 2024 && k < md)
             {
                 g = alm[k] / 4;
+                // this gets the name of the animation
                 if (g > 2024 && g < md)
                 {
                     ArtSubaAnim.Text = "";
@@ -20901,13 +21052,15 @@ namespace PSACompressor
                 return;
             }
             ArtSubaList.Items.Clear();
-            g = ArtSubaCbList.SelectedIndex;
+            g = ArtSubaCbList.SelectedIndex; // g is the codeblock id now
             if (alm[artdt + 6] == 0 && alm[artdt + 7] != 0)
             {
                 g++;
             }
+            // I belive this is the normal way to read in a subaction's psa commands for an article
             if (g < 3 && alm[artdt + 6 + g] != 0)
             {
+                Console.WriteLine("HI");
                 k = alm[artdt + 6 + g] / 4;
                 h = alm[k + i];
                 ArtSubaOffset.Text = "0x" + h.ToString("X");
@@ -20924,6 +21077,7 @@ namespace PSACompressor
                 }
                 return;
             }
+            // no idea what this down here is for or doing...
             rd3 = ArtDataList.Items[13].ToString();
             rd1 = rd3.Substring(6, 10);
             if (rd1 != "SubAction ")
@@ -21857,6 +22011,8 @@ namespace PSACompressor
             }
         }
 
+        // parameters combobox changed for article (floating points)
+        // should load in floating point values
         private void ArtParCbList_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (ArtParCbList.SelectedIndex == -1)
@@ -21867,6 +22023,7 @@ namespace PSACompressor
             ArtParList.Rows.Clear();
             g = ArtParCbList.SelectedIndex;
             h = 0;
+            // if no select
             if (ArticleIDCb.SelectedIndex == 0)
             {
                 i = 1;
@@ -21929,16 +22086,24 @@ namespace PSACompressor
                 n = rd2.Length;
                 an2 = dat;
                 j = 2;
+                Console.WriteLine($"rd2: {rd2}");
+                // j will always end up being 5 with the exception of kirby
                 while (j < n && rd2[j] == '-')
                 {
                     j += 3;
                 }
+                Console.WriteLine($"j: {j}");
                 for (k = 0; k < j; k += 3)
                 {
+                    Console.WriteLine($"an2: {an2}");
                     rd1 = rd2.Substring(k, 2);
+                    Console.WriteLine($"rd1: {rd1}");
                     g = Convert.ToInt32(rd1, 16);
+                    Console.WriteLine($"g: {g}");
                     an4 = alm[an2 + g];
+                    Console.WriteLine($"an4: {an4}");
                     an2 = an4 / 4;
+                    Console.WriteLine($"an2: {an2}");
                     if (an2 < stf || an2 >= md)
                     {
                         break;
@@ -21969,6 +22134,7 @@ namespace PSACompressor
                 }
                 ArtParList.Enabled = true;
             }
+            // if article selected
             else
             {
                 if (ArticleIDCb.SelectedIndex == -1)
@@ -34897,6 +35063,11 @@ namespace PSACompressor
             }
         }
 
+        /// <summary>
+        /// When menu strip that comes up when you right click subroutine comboboxes thing...
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void EvRnGenDat_Click(object sender, EventArgs e)
         {
             if (EvRnGenDatCbList.SelectedIndex == -1)
@@ -40853,6 +41024,12 @@ namespace PSACompressor
             }
         }
 
+        /// <summary>
+        /// After selecting a node in the tree view in the Misc tab under the Data tab
+        /// This should be where all of those values get loaded in like model visibility, bone floats, etc
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void DMiscList_AfterSelect(object sender, TreeViewEventArgs e)
         {
             DMiscPtxt.Visible = false;
@@ -40899,6 +41076,7 @@ namespace PSACompressor
                         DMiscParam.Items.Add(new ListViewItem(array));
                     }
                 }
+                // if clicking the tab for MiscSection, not anything in it yet just the tab that displays all the offsets
                 else if (rd1 == "MiscSection")
                 {
                     if (alm[dat + 4] >= 8096 && alm[dat + 4] < tds[25])
@@ -41221,6 +41399,7 @@ namespace PSACompressor
                     DMiscParam.Items.Add(new ListViewItem(array));
                 }
             }
+            // model visibility sections and such
             else if (rd1[0] == 'M')
             {
                 if (rd1[1] == 'o')
@@ -41251,9 +41430,10 @@ namespace PSACompressor
                             }
                         }
                     }
+                    // I think this is for those data tags on model visibility that decides which bone is started on
                     else if (rd1[16] == 'D')
                     {
-                        g = int.Parse(rd2.Substring(4));
+                        g = int.Parse(rd2.Substring(4)); // which data index is selected? 
                         if (alm[k + 2] >= 8096 && alm[k + 2] < tds[25])
                         {
                             DMiscOffset.Text = "0x" + (alm[k + 2] + g * 8).ToString("X");
@@ -41266,17 +41446,19 @@ namespace PSACompressor
                             DMiscParam.Items.Add(new ListViewItem(array));
                         }
                     }
+                    // pretty sure this block is for bone switches/bone groups/bone groups' bones
                     else
                     {
                         if (alm[k] < 8096 || alm[k] >= tds[25])
                         {
                             return;
                         }
-                        if (rd1[16] == 'H')
+                        if (rd1[16] == 'H') // if model visibility section is "hidden"
                         {
                             h = alm[k] / 4;
+                            Console.WriteLine($"k: {k}");
                         }
-                        else
+                        else // if model visibility section is "visible"
                         {
                             h = alm[k] / 4 + 1;
                         }
@@ -41284,16 +41466,18 @@ namespace PSACompressor
                         {
                             return;
                         }
+                        // I believe this is model visibility > section (like "Hidden" or "visible") > bone switch > bone group > list
+                        // so basically the bones for a bone group
                         if (rd2 == "List")
                         {
-                            m = DMiscList.SelectedNode.Parent.Parent.Index;
-                            n = DMiscList.SelectedNode.Parent.Index;
-                            g = alm[h] / 4 + m * 2;
+                            m = DMiscList.SelectedNode.Parent.Parent.Index; // bone switch index
+                            n = DMiscList.SelectedNode.Parent.Index; // bone group index
+                            g = alm[h] / 4 + m * 2; // bone group location
                             if (alm[g] < 8096 || alm[g] >= tds[25])
                             {
                                 return;
                             }
-                            k = alm[g] / 4 + n * 2;
+                            k = alm[g] / 4 + n * 2; // bones start location
                             if (alm[k] < 8096 || alm[k] >= tds[25])
                             {
                                 return;
@@ -41311,9 +41495,12 @@ namespace PSACompressor
                                 }
                             }
                         }
+                        // bone switches
                         else if (rd2[4] == 'S')
                         {
                             m = DMiscList.SelectedNode.Index;
+                            // I believe h is bone switch start location
+                            // m seems to be bone switch selected
                             DMiscOffset.Text = "0x" + (alm[h] + m * 8).ToString("X");
                             j = alm[h] / 4 + m * 2;
                             array[0] = "DataOffset";
@@ -41323,15 +41510,17 @@ namespace PSACompressor
                             array[1] = alm[j + 1].ToString();
                             DMiscParam.Items.Add(new ListViewItem(array));
                         }
+                        // bone groups
                         else
                         {
-                            m = DMiscList.SelectedNode.Parent.Index;
-                            n = DMiscList.SelectedNode.Index;
-                            g = alm[h] / 4 + m * 2;
+                            m = DMiscList.SelectedNode.Parent.Index; // boneswitch index
+                            n = DMiscList.SelectedNode.Index; // bone group index
+                            g = alm[h] / 4 + m * 2; // bone group location
                             if (alm[g] >= 8096 && alm[g] < tds[25])
                             {
                                 j = alm[g] / 4 + n * 2;
                                 DMiscOffset.Text = "0x" + (alm[g] + n * 8).ToString("X");
+                                Console.WriteLine($"m: {m}, n: {n}, g: {g}, Offset: {DMiscOffset.Text}");
                                 array[0] = "DataOffset";
                                 array[1] = "0x" + alm[j].ToString("X");
                                 DMiscParam.Items.Add(new ListViewItem(array));
@@ -41427,6 +41616,7 @@ namespace PSACompressor
                         }
                         else if (rd1[25] == '2')
                         {
+                            Console.WriteLine("HI");
                             if (rd1.Length > 27 && alm[h + 7] >= 8096 && alm[h + 7] < tds[25])
                             {
                                 m = DMiscList.SelectedNode.Index;
@@ -41472,15 +41662,19 @@ namespace PSACompressor
                                 DMiscParam.Items.Add(new ListViewItem(array));
                             }
                         }
+                        //MiscSection1
                         else if (rd2 == "Misc Section 1")
                         {
                             if (alm[h] < 8096 || alm[h] >= tds[25])
                             {
                                 return;
                             }
+                            // h is miscSectionLocation
                             DMiscOffset.Text = "0x" + alm[h].ToString("X");
                             m = alm[h] + 3;
                             n = alm[h] + 80;
+                            // I skipped this whole thing -- basically used to get g which is number of data entries in misc section
+                            // however all characters seem to have 7 so I hardcoded to 7...whatever Idk what's going on here at all
                             if (n > tds[25])
                             {
                                 n = tds[25];
@@ -41545,6 +41739,7 @@ namespace PSACompressor
                             DMiscParam.Items.Add(new ListViewItem(array));
                         }
                     }
+                    // final smash aura finalsmashaura
                     else if (rd1[12] == 'F')
                     {
                         if (alm[h + 1] < 8096 || alm[h + 1] >= tds[25])
@@ -41595,6 +41790,7 @@ namespace PSACompressor
                             }
                         }
                     }
+                    // hurtboxes
                     else if (rd1[12] == 'H')
                     {
                         if (alm[h + 3] < 8096 || alm[h + 3] >= tds[25])
@@ -41698,6 +41894,7 @@ namespace PSACompressor
                             }
                         }
                     }
+                    // ledgegrab ledge grab
                     else if (rd1[12] == 'L')
                     {
                         if (rd1.Length > 23)
@@ -44840,8 +45037,8 @@ namespace PSACompressor
             // 
             // ModeChange
             // 
-            this.ModeChange.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            this.ModeChange.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.ModeChange.Controls.Add(this.CmpressMode);
             this.ModeChange.Controls.Add(this.EventEditMode);
@@ -45026,8 +45223,8 @@ namespace PSACompressor
             // 
             // CmpText
             // 
-            this.CmpText.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            this.CmpText.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.CmpText.Location = new System.Drawing.Point(194, 2);
             this.CmpText.Multiline = true;
@@ -45189,8 +45386,8 @@ namespace PSACompressor
             // 
             // EvList
             // 
-            this.EvList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            this.EvList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.EvList.ContextMenuStrip = this.EvStrip;
             this.EvList.Enabled = false;
@@ -45218,47 +45415,47 @@ namespace PSACompressor
             this.EvSeleExrn,
             this.EvOffsetInterlock});
             this.EvStrip.Name = "EvStrip";
-            this.EvStrip.Size = new System.Drawing.Size(171, 202);
+            this.EvStrip.Size = new System.Drawing.Size(181, 224);
             // 
             // EvNoSelect
             // 
             this.EvNoSelect.Name = "EvNoSelect";
-            this.EvNoSelect.Size = new System.Drawing.Size(170, 22);
+            this.EvNoSelect.Size = new System.Drawing.Size(180, 22);
             this.EvNoSelect.Text = "No Select";
             this.EvNoSelect.Click += new System.EventHandler(this.EvNoSelect_Click);
             // 
             // EvAllSelect
             // 
             this.EvAllSelect.Name = "EvAllSelect";
-            this.EvAllSelect.Size = new System.Drawing.Size(170, 22);
+            this.EvAllSelect.Size = new System.Drawing.Size(180, 22);
             this.EvAllSelect.Text = "Select All";
             this.EvAllSelect.Click += new System.EventHandler(this.EvAllSelect_Click);
             // 
             // EvOffsetView
             // 
             this.EvOffsetView.Name = "EvOffsetView";
-            this.EvOffsetView.Size = new System.Drawing.Size(170, 22);
+            this.EvOffsetView.Size = new System.Drawing.Size(180, 22);
             this.EvOffsetView.Text = "Offset View";
             this.EvOffsetView.Click += new System.EventHandler(this.EvOffsetView_Click);
             // 
             // EvOpenSubRoutine
             // 
             this.EvOpenSubRoutine.Name = "EvOpenSubRoutine";
-            this.EvOpenSubRoutine.Size = new System.Drawing.Size(170, 22);
+            this.EvOpenSubRoutine.Size = new System.Drawing.Size(180, 22);
             this.EvOpenSubRoutine.Text = "Open Sub Routine";
             this.EvOpenSubRoutine.Click += new System.EventHandler(this.EvOpenSubRoutine_Click);
             // 
             // EvRefresh
             // 
             this.EvRefresh.Name = "EvRefresh";
-            this.EvRefresh.Size = new System.Drawing.Size(170, 22);
+            this.EvRefresh.Size = new System.Drawing.Size(180, 22);
             this.EvRefresh.Text = "Refresh";
             this.EvRefresh.Click += new System.EventHandler(this.EvRefresh_Click);
             // 
             // EvCopytxt
             // 
             this.EvCopytxt.Name = "EvCopytxt";
-            this.EvCopytxt.Size = new System.Drawing.Size(170, 22);
+            this.EvCopytxt.Size = new System.Drawing.Size(180, 22);
             this.EvCopytxt.Text = "Copy Text";
             this.EvCopytxt.Click += new System.EventHandler(this.EvCopytxt_Click);
             // 
@@ -45270,7 +45467,7 @@ namespace PSACompressor
             this.EvParMoveF,
             this.EvParMoveB});
             this.EvMoveOffset.Name = "EvMoveOffset";
-            this.EvMoveOffset.Size = new System.Drawing.Size(170, 22);
+            this.EvMoveOffset.Size = new System.Drawing.Size(180, 22);
             this.EvMoveOffset.Text = "Move Offset";
             this.EvMoveOffset.Click += new System.EventHandler(this.EvMoveOffset_Click);
             // 
@@ -45305,7 +45502,7 @@ namespace PSACompressor
             // EvSeleExrn
             // 
             this.EvSeleExrn.Name = "EvSeleExrn";
-            this.EvSeleExrn.Size = new System.Drawing.Size(170, 22);
+            this.EvSeleExrn.Size = new System.Drawing.Size(180, 22);
             this.EvSeleExrn.Text = "Set External";
             this.EvSeleExrn.Click += new System.EventHandler(this.EvSeleExrn_Click);
             // 
@@ -45313,7 +45510,7 @@ namespace PSACompressor
             // 
             this.EvOffsetInterlock.CheckOnClick = true;
             this.EvOffsetInterlock.Name = "EvOffsetInterlock";
-            this.EvOffsetInterlock.Size = new System.Drawing.Size(170, 22);
+            this.EvOffsetInterlock.Size = new System.Drawing.Size(180, 22);
             this.EvOffsetInterlock.Text = "Offset Interlock";
             // 
             // EvDesText
@@ -45448,7 +45645,7 @@ namespace PSACompressor
             // 
             // EvSubaAnim
             // 
-            this.EvSubaAnim.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.EvSubaAnim.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.EvSubaAnim.Location = new System.Drawing.Point(228, 33);
             this.EvSubaAnim.MaxLength = 31;
@@ -45510,7 +45707,7 @@ namespace PSACompressor
             // 
             // EvSubaAnimFlag
             // 
-            this.EvSubaAnimFlag.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.EvSubaAnimFlag.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.EvSubaAnimFlag.ContextMenuStrip = this.AnimStrip;
             this.EvSubaAnimFlag.Location = new System.Drawing.Point(227, 4);
@@ -45580,7 +45777,7 @@ namespace PSACompressor
             // 
             // EvRnOffTrace
             // 
-            this.EvRnOffTrace.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.EvRnOffTrace.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.EvRnOffTrace.ContextMenuStrip = this.EvRnStrip;
             this.EvRnOffTrace.FormattingEnabled = true;
@@ -45693,7 +45890,7 @@ namespace PSACompressor
             // 
             // EvRnOffCbList
             // 
-            this.EvRnOffCbList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.EvRnOffCbList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.EvRnOffCbList.ContextMenuStrip = this.EvRnStrip;
             this.EvRnOffCbList.FormattingEnabled = true;
@@ -45781,7 +45978,7 @@ namespace PSACompressor
             // 
             // EvPreSelExternal
             // 
-            this.EvPreSelExternal.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.EvPreSelExternal.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.EvPreSelExternal.Location = new System.Drawing.Point(146, 30);
             this.EvPreSelExternal.Name = "EvPreSelExternal";
@@ -46067,8 +46264,8 @@ namespace PSACompressor
             // 
             // ArticleTab
             // 
-            this.ArticleTab.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            this.ArticleTab.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.ArticleTab.Controls.Add(this.ArtAction);
             this.ArticleTab.Controls.Add(this.ArtSuba);
@@ -46193,8 +46390,8 @@ namespace PSACompressor
             // 
             // ArtActList
             // 
-            this.ArtActList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            this.ArtActList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.ArtActList.ContextMenuStrip = this.EvStrip;
             this.ArtActList.FormattingEnabled = true;
@@ -46310,7 +46507,7 @@ namespace PSACompressor
             // 
             // ArtSubaAnim
             // 
-            this.ArtSubaAnim.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.ArtSubaAnim.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.ArtSubaAnim.Location = new System.Drawing.Point(238, 33);
             this.ArtSubaAnim.MaxLength = 31;
@@ -46341,7 +46538,7 @@ namespace PSACompressor
             // 
             // ArtSubaAnimFlag
             // 
-            this.ArtSubaAnimFlag.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.ArtSubaAnimFlag.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.ArtSubaAnimFlag.Location = new System.Drawing.Point(237, 4);
             this.ArtSubaAnimFlag.Name = "ArtSubaAnimFlag";
@@ -46477,8 +46674,8 @@ namespace PSACompressor
             // 
             // ArtSubaList
             // 
-            this.ArtSubaList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            this.ArtSubaList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.ArtSubaList.ContextMenuStrip = this.EvStrip;
             this.ArtSubaList.FormattingEnabled = true;
@@ -46535,8 +46732,8 @@ namespace PSACompressor
             this.ArtParList.AllowUserToAddRows = false;
             this.ArtParList.AllowUserToDeleteRows = false;
             this.ArtParList.AllowUserToResizeRows = false;
-            this.ArtParList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            this.ArtParList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.ArtParList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.ArtParList.ColumnHeadersVisible = false;
@@ -46657,7 +46854,7 @@ namespace PSACompressor
             // 
             // ArtParCbList
             // 
-            this.ArtParCbList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.ArtParCbList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.ArtParCbList.FormattingEnabled = true;
             this.ArtParCbList.Location = new System.Drawing.Point(64, 5);
@@ -46710,8 +46907,8 @@ namespace PSACompressor
             // 
             // ArtDataList
             // 
-            this.ArtDataList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            this.ArtDataList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.ArtDataList.ContextMenuStrip = this.DataDTStrip;
             this.ArtDataList.FormattingEnabled = true;
@@ -47020,7 +47217,7 @@ namespace PSACompressor
             // 
             // DMiscCb
             // 
-            this.DMiscCb.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+            this.DMiscCb.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.DMiscCb.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.DMiscCb.FormattingEnabled = true;
@@ -47055,8 +47252,8 @@ namespace PSACompressor
             // 
             // DMiscParam
             // 
-            this.DMiscParam.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            this.DMiscParam.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.DMiscParam.ContextMenuStrip = this.DataDTStrip;
             this.DMiscParam.FullRowSelect = true;
@@ -47102,7 +47299,7 @@ namespace PSACompressor
             // 
             // minitxt
             // 
-            this.minitxt.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.minitxt.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.minitxt.Location = new System.Drawing.Point(99, 29);
             this.minitxt.Name = "minitxt";
